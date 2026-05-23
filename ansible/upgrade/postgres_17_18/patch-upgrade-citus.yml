@@ -1,0 +1,12 @@
+---
+- name: PATCH Upgrade Citus
+  hosts: all
+  become: yes
+  tasks:
+    - name: Patch Update Citus Package
+      ansible.builtin.shell: sudo yum update citus140_17
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: patroni
+        state: restarted
+...

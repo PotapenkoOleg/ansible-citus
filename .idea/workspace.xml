@@ -4,13 +4,19 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Dir structure changes and docs">
-      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/ansible.cfg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/install-haproxy-rpm.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/inventory" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/blue_green_migration/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" afterDir="false" />
+    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Bonus">
+      <change afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_17_18/cluster-settings.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_17_18/inventory" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_17_18/major-upgrade-citus.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_17_18/patch-upgrade-citus.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_17_18/upgrade-postgres.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/update/postgres_16_17/upgrade-citus.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_16_17/upgrade-citus.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/update/postgres_16_17/upgrade-postgres.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_16_17/upgrade-postgres.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/update/postgres_17_18/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/upgrade/postgres_17_18/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,23 +47,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000364375197" />
-      <entry key="MS500" value="1.0326756899165928" />
-      <entry key="S2" value="1.5341953414714307" />
-      <entry key="S5" value="2.1251242781602917" />
-      <entry key="S10" value="2.5335242974294765" />
-      <entry key="S30" value="3.1718956990118765" />
-      <entry key="S60" value="3.5076537601093833" />
-      <entry key="M2" value="3.861851216093343" />
-      <entry key="M5" value="6.338123654859666" />
-      <entry key="M10" value="13.326530380707247" />
-      <entry key="M15" value="20.379847940127338" />
-      <entry key="M30" value="40.42027090101877" />
-      <entry key="H1" value="71.81880209786766" />
-      <entry key="H2" value="104.39490193923794" />
-      <entry key="H4" value="128.72275040465559" />
-      <entry key="D1" value="154.9589225986656" />
-      <entry key="W1" value="160.11912934401667" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0002211612659089" />
+      <entry key="S2" value="1.2475595789673004" />
+      <entry key="S5" value="2.5530719416610532" />
+      <entry key="S10" value="4.396198793993623" />
+      <entry key="S30" value="7.9352061533901015" />
+      <entry key="S60" value="11.982876946791947" />
+      <entry key="M2" value="19.86131315193746" />
+      <entry key="M5" value="42.762094990041454" />
+      <entry key="M10" value="68.8030331081011" />
+      <entry key="M15" value="85.9405038222474" />
+      <entry key="M30" value="121.55562858334442" />
+      <entry key="H1" value="170.19412741570977" />
+      <entry key="H2" value="225.3972116026953" />
+      <entry key="H4" value="271.6265533872663" />
+      <entry key="D1" value="326.5902240789989" />
+      <entry key="W1" value="338.0271538473801" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -79,23 +85,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9726549830999319" />
-      <entry key="MS500" value="1.027009652224931" />
-      <entry key="S2" value="1.5321412103339351" />
-      <entry key="S5" value="2.1239301787529974" />
-      <entry key="S10" value="2.532791301820289" />
-      <entry key="S30" value="3.171584518217074" />
-      <entry key="S60" value="3.507481421374992" />
-      <entry key="M2" value="3.861755964110317" />
-      <entry key="M5" value="6.338053998626825" />
-      <entry key="M10" value="13.32644639843477" />
-      <entry key="M15" value="20.37975889291846" />
-      <entry key="M30" value="40.4201824019921" />
-      <entry key="H1" value="71.81872481357742" />
-      <entry key="H2" value="104.39484618173543" />
-      <entry key="H4" value="128.7227160980653" />
-      <entry key="D1" value="154.95891571904255" />
-      <entry key="W1" value="160.1191283284573" />
+      <entry key="MS100" value="0.9659363289248456" />
+      <entry key="MS500" value="0.9933124745483607" />
+      <entry key="S2" value="1.2455075239272315" />
+      <entry key="S5" value="2.551534730028526" />
+      <entry key="S10" value="4.394891039274623" />
+      <entry key="S30" value="7.933639428919217" />
+      <entry key="S60" value="11.979962418957827" />
+      <entry key="M2" value="19.857734868591415" />
+      <entry key="M5" value="42.759223026578745" />
+      <entry key="M10" value="68.8010872939865" />
+      <entry key="M15" value="85.9389967729598" />
+      <entry key="M30" value="121.55463267161123" />
+      <entry key="H1" value="170.19347612408933" />
+      <entry key="H2" value="225.39681419903246" />
+      <entry key="H4" value="271.62632850049374" />
+      <entry key="D1" value="326.59018187117" />
+      <entry key="W1" value="338.0271476837669" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -119,7 +125,7 @@
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/oleg/Developer/GitHub",
+    "last_opened_file_path": "/home/oleg/PycharmProjects/ansible-citus/ansible/upgrade/postgres_17_18",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -130,6 +136,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ansible/upgrade/postgres_17_18" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/ansible/install/postgres_17" />
       <recent name="$PROJECT_DIR$/ansible/install/postgres_18" />
@@ -153,7 +162,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1779491619655</updated>
-      <workItem from="1779491620658" duration="6497000" />
+      <workItem from="1779491620658" duration="11231000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -171,7 +180,23 @@
       <option name="project" value="LOCAL" />
       <updated>1779496107545</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Install Postgres 18 with Citus 14.0">
+      <option name="closed" value="true" />
+      <created>1779499255020</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1779499255020</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Bonus">
+      <option name="closed" value="true" />
+      <created>1779502274698</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1779502274698</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,7 +205,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Dir structure changes and docs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dir structure changes and docs" />
+    <MESSAGE value="Install Postgres 18 with Citus 14.0" />
+    <MESSAGE value="Bonus" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bonus" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

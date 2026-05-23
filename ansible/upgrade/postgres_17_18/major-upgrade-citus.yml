@@ -1,0 +1,24 @@
+---
+- name: Upgrade Citus
+  hosts: all
+  become: yes
+  var_files:
+    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+  tasks:
+    - name: Update Citus Package
+      ansible.builtin.shell: yum swap citus131_17 citus140_17
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: patroni
+        state: restarted
+    - name: Update Citus Extension
+      ansible.builtin.shell: psql -U postgres -d {{ CLUSTER_NAME }} -c "ALTER EXTENSION citus UPDATE;"
+      become_user: postgres
+    - name: Check Citus Version
+      ansible.builtin.shell: psql -U postgres -d {{ CLUSTER_NAME }} -c "SELECT * FROM citus_version();"
+      become_user: postgres
+      # TODO: Run on Coordinator node
+#    - name: Finish Setup
+#      ansible.builtin.shell: psql -U postgres -d {{ CLUSTER_NAME }} -c "CALL citus_finish_citus_upgrade();"
+#      become_user: postgres
+...
