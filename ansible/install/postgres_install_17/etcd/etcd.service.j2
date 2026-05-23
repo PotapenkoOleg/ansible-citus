@@ -1,0 +1,36 @@
+# BEGIN ANSIBLE MANAGED BLOCK
+[Unit]
+Description=ETCD service
+Documentation=https://github.com/etcd-io/etcd
+After=syslog.target network.target
+
+{% set etcd_server_list = [] %}
+{% set outer_ns = {'etcd_name': '', 'etcd_ip': ''} %}
+{% for i in range(groups['etcd_servers']|length) %}
+{% set _ = etcd_server_list.append('etcd'~ (i+1) ~'=http://'~ groups['etcd_servers'][i] ~':2380' ) %}
+{% if groups['etcd_servers'][i] in ansible_all_ipv4_addresses %}
+{% set _ = outer_ns.update({'etcd_name': 'etcd' ~ (i+1), 'etcd_ip': groups['etcd_servers'][i]}) %}
+{% endif %}
+{% endfor %}
+[Service]
+User=etcd
+Group=etcd
+Type=notify
+ExecStart={{ ETCD_DIRECTORY }}/etcd \
+ --name {{ outer_ns.etcd_name }} \
+ --data-dir {{ ETCD_DIRECTORY }}/data \
+ --initial-advertise-peer-urls http://{{ outer_ns.etcd_ip }}:2380 \
+ --listen-peer-urls http://{{ outer_ns.etcd_ip }}:2380 \
+ --listen-client-urls http://{{ outer_ns.etcd_ip }}:2379,http://127.0.0.1:2379 \
+ --advertise-client-urls http://{{ outer_ns.etcd_ip }}:2379 \
+ --initial-cluster-token {{ ETCD_CLUSTER_NAME }} \
+ --initial-cluster {{ etcd_server_list|join(',') }} \
+ --initial-cluster-state new \
+ --heartbeat-interval 1000 \
+ --election-timeout 5000
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+# END ANSIBLE MANAGED BLOCK

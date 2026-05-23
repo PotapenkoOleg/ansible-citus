@@ -1,0 +1,9 @@
+---
+- name: COPY BASE CONFIGS
+  hosts: all
+  become: yes
+  tasks:
+    - name: COPY
+      ansible.builtin.shell: "cp /opt/postgres/16/data/postgresql.base.conf /opt/postgres/17/data/postgresql.base.conf"
+
+...

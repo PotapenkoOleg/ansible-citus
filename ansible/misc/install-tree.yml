@@ -1,0 +1,10 @@
+---
+- name: Install Tree
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Tree using DNF
+      ansible.builtin.dnf:
+        name: tree
+        state: latest
+...

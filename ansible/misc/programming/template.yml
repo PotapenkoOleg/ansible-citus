@@ -1,0 +1,11 @@
+---
+- name: debug_test
+  hosts: citus_coordinators
+  vars:
+    user: test_user
+  tasks:
+    - name: Create {{ user }}
+      template:
+        src: my_test.j2
+        dest: /tmp/my_test.conf
+...

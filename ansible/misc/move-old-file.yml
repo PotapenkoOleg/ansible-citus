@@ -1,0 +1,8 @@
+---
+- name: Update postgresql.base.conf
+  hosts: all
+  become: yes
+  tasks:
+    - name: Backup Current Config
+      ansible.builtin.shell: "mv /var/lib/pgsql/16/data/postgresql.conf /var/lib/pgsql/16/data/postgresql.conf.old"
+...

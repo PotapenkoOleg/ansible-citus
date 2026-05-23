@@ -1,0 +1,233 @@
+---
+- name: Upgrade Postgres
+  hosts: all
+  become: yes
+  vars:
+    OLD_POSTGRES_VERSION: "16"
+    NEW_POSTGRES_VERSION: "17"
+    POSTGRES_ROOT_DIR: "/opt/postgres"
+    POSTGRES_DEFAULT_DIR: "/var/lib/pgsql"
+    PATRONI_CLUSTER_NAME: "prod-citus"
+  tasks:
+#    # TODO: Run on Coordinator SELECT citus_prepare_pg_upgrade();
+#    # TODO: RUN ON EVERY NODE FOR EVERY DATABASE !!!
+#    - name: Add Citus repository for package manager
+#      ansible.builtin.shell: curl https://install.citusdata.com/community/rpm.sh | bash
+#    - name: Install Postgres with Citus extension
+#      ansible.builtin.dnf:
+#        name: citus131_{{ NEW_POSTGRES_VERSION }}
+#        state: latest
+#    - name: Initialize system database
+#      ansible.builtin.shell: /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin/postgresql-{{ NEW_POSTGRES_VERSION }}-setup initdb
+#    - name: Install PG Cron
+#      ansible.builtin.dnf:
+#        name: pg_cron_{{ NEW_POSTGRES_VERSION }}
+#        state: latest
+#    - name: Install PG Jobmon
+#      ansible.builtin.dnf:
+#        name: pg_jobmon_{{ NEW_POSTGRES_VERSION }}
+#        state: latest
+#    - name: Install PG Partman
+#      ansible.builtin.dnf:
+#        name: pg_partman_{{ NEW_POSTGRES_VERSION }}
+#        state: latest
+#    - name: Step 1
+#      ansible.builtin.shell: "chown -R postgres:postgres {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Step 2
+#      ansible.builtin.shell: "mv {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf.old"
+#    - name: Step 3
+#      ansible.builtin.shell: "mv {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_hba.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_hba.conf.old"
+#    - name: Step 4
+#      ansible.builtin.shell: "mv {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_ident.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_ident.conf.old"
+#    - name: Step 5
+#      ansible.builtin.shell: "cp {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/postgresql.base.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.base.conf"
+#    - name: Step 5.5
+#      ansible.builtin.shell: "cp {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/postgresql.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf"
+#    - name: Step 6
+#      ansible.builtin.shell: "cp {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/pg_hba.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_hba.conf"
+#    - name: Step 7
+#      ansible.builtin.shell: "cp {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/pg_ident.conf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_ident.conf"
+#    - name: Step 7.1
+#      ansible.builtin.shell: "cp {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/server.crt {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/server.crt"
+#    - name: Step 7.2
+#      ansible.builtin.shell: "cp {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/server.key {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/server.key"
+#    - name: Step 8
+#      ansible.builtin.shell: "mkdir -p {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}"
+#    - name: Step 9
+#      ansible.builtin.shell: "mkdir {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Step 10
+#      ansible.builtin.shell: "mkdir {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/log"
+#    - name: Step 11
+#      ansible.builtin.shell: "chmod 750 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Step 12
+#      ansible.builtin.shell: "chmod 776 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/log"
+#    - name: Step 13
+#      ansible.builtin.shell: "cp -R {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}"
+#    - name: Step 14
+#      ansible.builtin.shell: "chown -R postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}"
+#    - name: Create Postgres Service Directory
+#      ansible.builtin.shell: "mkdir -p /etc/systemd/system/postgresql-{{ NEW_POSTGRES_VERSION }}.service.d"
+#    - name: Create Postgres Service File
+#      ansible.builtin.shell: "touch /etc/systemd/system/postgresql-{{ NEW_POSTGRES_VERSION }}.service.d/override.conf"
+#    - name: Add access
+#      ansible.builtin.blockinfile:
+#        path: "/etc/systemd/system/postgresql-{{ NEW_POSTGRES_VERSION }}.service.d/override.conf"
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+#        block: |
+#          [Service]
+#          Environment=PGDATA={{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/
+#        state: "present"
+#    - name: Reload Service Config
+#      ansible.builtin.shell: "systemctl daemon-reload"
+#    - name: Create Directory
+#      ansible.builtin.shell: "mkdir -p /opt/postgres/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Change Owner
+#      ansible.builtin.shell: "chown postgres:postgres /opt/postgres/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Change Mode
+#      ansible.builtin.shell: "chmod 750 /opt/postgres/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Change Permissions on pg_hba.conf
+#      ansible.builtin.shell: "chmod 600 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_hba.conf"
+#    - name: Change Ownership on pg_hba.conf
+#      ansible.builtin.shell: "chown postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_hba.conf"
+#    - name: Change Permissions on pg_ident.conf
+#      ansible.builtin.shell: "chmod 600 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_ident.conf"
+#    - name: Change Ownership on pg_ident.conf
+#      ansible.builtin.shell: "chown postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_ident.conf"
+#    - name: Change Permissions on postgresql.conf
+#      ansible.builtin.shell: "chmod 600 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf"
+#    - name: Change Ownership on postgresql.conf
+#      ansible.builtin.shell: "chown postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf"
+#    - name: Change Permissions on postgresql.base.conf
+#      ansible.builtin.shell: "chmod 600 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.base.conf"
+#    - name: Change Ownership on postgresql.base.conf
+#      ansible.builtin.shell: "chown postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.base.conf"
+#    - name: Change Permissions on server.key
+#      ansible.builtin.shell: "chmod 600 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/server.key"
+#    - name: Change Ownership on server.key
+#      ansible.builtin.shell: "chown postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/server.key"
+#    - name: Change Permissions on server.crt
+#      ansible.builtin.shell: "chmod 600 {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/server.crt"
+#    - name: Change Ownership on server.crt
+#      ansible.builtin.shell: "chown postgres:postgres {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/server.crt"
+#    - name: Change Log Directory In Base Config
+#      ansible.builtin.lineinfile:
+#        path: "{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.base.conf"
+#        regexp: "log_directory = '{{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/log' # MODIFIED"
+#        line: "log_directory = '{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/log' # MODIFIED"
+#    - name: Change postgresql.conf 1
+#      ansible.builtin.lineinfile:
+#        path: "{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf"
+#        regexp: "hba_file = '{{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/pg_hba.conf'"
+#        line: "hba_file = '{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_hba.conf'"
+#    - name: Change postgresql.conf 2
+#      ansible.builtin.lineinfile:
+#        path: "{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/postgresql.conf"
+#        regexp: "ident_file = '{{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data/pg_ident.conf'"
+#        line: "ident_file ='{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/pg_ident.conf'"
+#    - name: Create Socket 1
+#      ansible.builtin.shell: "touch /opt/postgres/{{ NEW_POSTGRES_VERSION }}/data/.s.PGSQL.50432"
+#    - name: Create Socket 1
+#      ansible.builtin.shell: "chown postgres:postgres /opt/postgres/{{ NEW_POSTGRES_VERSION }}/data/.s.PGSQL.50432"
+#    - name: Create Socket 1
+#      ansible.builtin.shell: "chmod 744 /opt/postgres/{{ NEW_POSTGRES_VERSION }}/data/.s.PGSQL.50432"
+#    # TODO: STOP OLD CLUSTER USING PATRONI COMMAND
+#    - name: Stop Postgres Service
+#      ansible.builtin.service:
+#        name: postgresql-{{ OLD_POSTGRES_VERSION }}
+#        state: stopped
+#    - name: Check upgrade
+#      ansible.builtin.shell: "runuser -u postgres -- /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin/pg_upgrade -b /usr/pgsql-{{ OLD_POSTGRES_VERSION }}/bin -B /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin/ -d {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data -D {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/ --check"
+#      args:
+#        chdir: "{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Upgrade
+#      ansible.builtin.shell: "runuser -u postgres -- /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin/pg_upgrade -b /usr/pgsql-{{ OLD_POSTGRES_VERSION }}/bin -B /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin/ -d {{ POSTGRES_ROOT_DIR }}/{{ OLD_POSTGRES_VERSION }}/data -D {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/ "
+#      args:
+#        chdir: "{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data"
+#    - name: Remove OLD Patroni Config
+#      ansible.builtin.shell: "rm -f /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.{{ OLD_POSTGRES_VERSION }}.yml"
+#    - name: Backup OLD Patroni Config
+#      ansible.builtin.shell: "cp /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.yml /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.{{ OLD_POSTGRES_VERSION }}.yml"
+#    - name: Remove Patroni Config
+#      ansible.builtin.shell: "rm -f /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.{{ NEW_POSTGRES_VERSION }}.yml"
+#    - name: Backup Patroni Config
+#      ansible.builtin.shell: "cp /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.yml /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.{{ NEW_POSTGRES_VERSION }}.yml"
+#    - name: Change Data Directory
+#      ansible.builtin.lineinfile:
+#        path: "/etc/patroni/{{ PATRONI_CLUSTER_NAME }}.yml"
+#        regexp: "  data_dir: {{ POSTGRES_ROOT_DIR}}/{{ OLD_POSTGRES_VERSION }}/data/"
+#        line: "  data_dir: {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/"
+#    - name: Change Data Directory
+#      ansible.builtin.lineinfile:
+#        path: "/etc/patroni/{{ PATRONI_CLUSTER_NAME }}.yml"
+#        regexp: "  bin_dir: /usr/pgsql-{{ OLD_POSTGRES_VERSION }}/bin"
+#        line: "  bin_dir: /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin"
+    - name: Change Data Directory
+      ansible.builtin.lineinfile:
+        path: "/etc/patroni/{{ PATRONI_CLUSTER_NAME }}.yml"
+        regexp: "    log_directory: '/opt/postgres/16/log'"
+        line: "    log_directory: '/opt/postgres/17/log'"
+    - name: Change Data Directory
+      ansible.builtin.lineinfile:
+        path: "/opt/postgres/17/data/postgresql.conf"
+        regexp: "log_directory = '/opt/postgres/16/log'"
+        line: "log_directory = '/opt/postgres/17/log'"
+# TODO: CLEAN ETCD
+# etcdctl get "" --prefix --keys-only
+# /service/{{ PATRONI_CLUSTER_NAME }}
+# etcdctl del "/service/{{ PATRONI_CLUSTER_NAME }}" --prefix
+# 127.0.0.1:2379,127.0.0.1:2379,127.0.0.1:2379
+
+# TODO: CLEAN DATA DIR ON DR
+
+#    - name: Remove Old DATA Directory
+#      ansible.builtin.shell: "rm -rf /opt/postgres/17/data/*"
+
+    - name: Enable And Start Postgres Service
+      ansible.builtin.service:
+        name: postgresql-{{ NEW_POSTGRES_VERSION }}
+        enabled: no
+    - name: Enable And Start Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        enabled: yes
+        state: started
+    - name: Disable And Stop Postgres {{ OLD_POSTGRES_VERSION }} Service
+      ansible.builtin.service:
+        name: postgresql-{{ OLD_POSTGRES_VERSION }}
+        state: stopped
+        enabled: no
+    - name: Remove old cluster
+      ansible.builtin.shell: "bash {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/delete_old_cluster.sh"
+      args:
+        chdir: "{{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data"
+    - name: Remove Unused DATA Directory
+      ansible.builtin.shell: "rm -rf {{ POSTGRES_DEFAULT_DIR }}/{{ NEW_POSTGRES_VERSION }}"
+    - name: Remove Old DATA Directory
+      ansible.builtin.shell: "rm -rf {{ POSTGRES_DEFAULT_DIR }}/{{ OLD_POSTGRES_VERSION }}"
+    - name: Remove Old PG Cron
+      ansible.builtin.dnf:
+        name: pg_cron_{{ OLD_POSTGRES_VERSION }}
+        state: absent
+    - name: Remove Old PG Jobmon
+      ansible.builtin.dnf:
+        name: pg_jobmon_{{ OLD_POSTGRES_VERSION }}
+        state: absent
+    - name: Remove Old PG Partman
+      ansible.builtin.dnf:
+        name: pg_partman_{{ OLD_POSTGRES_VERSION }}
+        state: absent
+    - name: Remove Old Citus
+      ansible.builtin.dnf:
+        name: citus121_{{ OLD_POSTGRES_VERSION }}
+        state: absent
+    - name: Remove old service directory
+      ansible.builtin.shell: "rm -rf /etc/systemd/system/postgresql-{{ OLD_POSTGRES_VERSION }}.service"
+    - name: Remove old service directory
+      ansible.builtin.shell: "rm -rf /etc/systemd/system/postgresql-{{ OLD_POSTGRES_VERSION }}.service.d"
+
+   # TODO:
+#     ALTER EXTENSION citus UPDATE;
+#     SELECT * FROM citus_version();
+#     Run On The Coordinator Node
+#     CALL citus_finish_citus_upgrade();
+...

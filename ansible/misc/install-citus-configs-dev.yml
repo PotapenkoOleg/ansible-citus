@@ -1,0 +1,57 @@
+---
+- name: Update pg_hba
+  hosts: all
+  become: yes
+  tasks:
+    - name: Backup Current Config
+      ansible.builtin.shell: "mv /opt/postgres/16/data/pg_hba.conf /opt/postgres/16/data/pg_hba.conf.backup"
+    - name: Create New Config
+      ansible.builtin.shell: "touch /opt/postgres/16/data/pg_hba.conf"
+    - name: Add access
+      ansible.builtin.blockinfile:
+        path: "/opt/postgres/16/data/pg_hba.conf"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          # TYPE  DATABASE        USER            ADDRESS                 METHOD
+          
+          # "local" is for Unix domain socket connections only
+          local   all             all                                     trust
+          # IPv4 local connections:
+          host    all             all             127.0.0.1/32            trust
+          # IPv6 local connections:
+          host    all             all             ::1/128                 trust
+          # HAProxy
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          # Citus
+          # Coordinators
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          #Primary Site
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          #Disaster Recovery Site
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          host    all             all           127.0.0.1/24          trust
+          # Local Domain Class A
+          host    all             all             127.0.0.1/8              scram-sha-256
+          # Allow replication connections from localhost, by a user with the
+          # replication privilege.
+          local   replication     all                                     peer
+          host    replication     all             127.0.0.1/32            scram-sha-256
+          host    replication     all             ::1/128                 scram-sha-256
+          host    replication     rep_user        127.0.0.1/8              scram-sha-256
+        state: "present"
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: restarted
+...

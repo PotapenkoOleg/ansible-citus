@@ -1,0 +1,11 @@
+---
+- name: Disable And Stop Postgres 16 Service
+  hosts: all
+  become: yes
+  tasks:
+    - name: Disable And Stop Postgres 16 Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: stopped
+        enabled: no
+...

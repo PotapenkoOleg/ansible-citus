@@ -1,0 +1,38 @@
+---
+# Please Ensure SELinux and OS Firewall are disabled
+- name: Install HAProxy
+  hosts: haproxy_servers
+  become: yes
+  var_files:
+    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+  tasks:
+    - name: Create haproxy group
+      group:
+        name: haproxy
+        system: yes
+    - name: Create haproxy user
+      user:
+        name: haproxy
+        group: haproxy
+        system: yes
+        shell: "/sbin/nologin"
+    - name: Install haproxy using DNF
+      dnf:
+        name: haproxy
+        state: present
+    - name: Reload systemd to recognize service
+      systemd:
+        daemon_reload: yes
+    - name: Config file template
+      template:
+        src: haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+        owner: haproxy
+        group: haproxy
+        mode: '0644'
+    - name: Enable HAProxy service
+      systemd:
+        name: haproxy
+        enabled: yes
+        state: started
+...

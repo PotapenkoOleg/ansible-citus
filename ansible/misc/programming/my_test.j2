@@ -1,0 +1,26 @@
+scope: dev-citus
+name: coordinator1
+
+{% if ansible_facts.default_ipv4.address == '127.0.0.1' or ansible_facts.default_ipv4.address == '127.0.0.1' %}
+citus:
+  group: 1  # TODO: 0 for coordinator and 1, 2, 3, etc for workers
+  database: datalake_core_test
+{% endif %}
+
+{% if ansible_facts.default_ipv4.address == '127.0.0.1' %}
+citus:
+  group: 1  # TODO: 0 for coordinator and 1, 2, 3, etc for workers
+  database: datalake_core_test
+{% else %}
+citus:
+  group: 2  # TODO: 0 for coordinator and 1, 2, 3, etc for workers
+  database: datalake_core_test
+{% endif %}
+
+restapi:
+  listen: {{ ansible_facts.default_ipv4.address }}:8008
+  connect_address: {{ ansible_facts.default_ipv4.address }}:8008 # TODO:
+
+{% for my_ip in ansible_facts.all_ipv4_addresses %}
+    {{ my_ip }}
+{% endfor %}

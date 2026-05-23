@@ -1,0 +1,51 @@
+# BEGIN ANSIBLE MANAGED BLOCK
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# Local connections
+local   all             all                                     trust
+
+# IPv4 local connections:
+host    all             all           127.0.0.1/32              trust
+
+# IPv6 local connections:
+host    all             all           ::1/128                   trust
+
+# Jump server
+# host    all             all           {{ JUMP_SERVER_IP }}      scram-sha-256
+
+# Local Domain Class A
+# host    all             all             127.0.0.1/8              scram-sha-256
+
+# HAProxy
+{% for i in range(groups['haproxy_servers']|length) %}
+{{'host    all             all           '~groups['haproxy_servers'][i]~'/24          trust'}}
+{% endfor %}
+
+# CITUS
+
+# Coordinators Primary Site
+{% for i in range(groups['coordinators_primary']|length) %}
+{{'host    all             all           '~groups['coordinators_primary'][i]~'/24          trust'}}
+{{'host    replication     all           '~groups['coordinators_primary'][i]~'/24          trust'}}
+{% endfor %}
+
+# Coordinators Disaster Recovery Site
+{% for i in range(groups['coordinators_dr']|length) %}
+{{'host    all             all           '~groups['coordinators_dr'][i]~'/24          trust'}}
+{{'host    replication     all           '~groups['coordinators_dr'][i]~'/24          trust'}}
+{% endfor %}
+
+# Workers Primary Site
+{% for i in range(groups['workers_primary']|length) %}
+{{'host    all             all           '~groups['workers_primary'][i]~'/24          trust'}}
+{{'host    replication     all           '~groups['workers_primary'][i]~'/24          trust'}}
+{% endfor %}
+
+# Workers Disaster Recovery Site
+{% for i in range(groups['workers_dr']|length) %}
+{{'host    all             all           '~groups['workers_dr'][i]~'/24          trust'}}
+{{'host    replication     all           '~groups['workers_dr'][i]~'/24          trust'}}
+{% endfor %}
+
+# END ANSIBLE MANAGED BLOCK

@@ -1,0 +1,104 @@
+---
+- name: Update postgresql.conf
+  hosts: all
+  become: yes
+  tasks:
+    - name: Backup Current Config
+      ansible.builtin.shell: "mv /opt/postgres/16/data/postgresql.conf /opt/postgres/16/data/postgresql.conf.backup"
+    - name: Create New Config
+      ansible.builtin.shell: "touch /opt/postgres/16/data/postgresql.conf"
+    - name: Add access
+      ansible.builtin.blockinfile:
+        path: "/opt/postgres/16/data/postgresql.conf"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          listen_addresses = '*' # MODIFIED
+          max_connections = 1000 # MODIFIED
+          shared_buffers = 10GB # MODIFIED
+          dynamic_shared_memory_type = posix
+          max_wal_size = 256GB # MODIFIED
+          min_wal_size = 80MB
+          log_destination = 'stderr'
+          logging_collector = on # MODIFIED
+          log_directory = '/opt/postgres/16/log' # MODIFIED
+          log_filename = 'postgresql-%a.log'
+          log_rotation_age = 1d
+          log_rotation_size = 0
+          log_truncate_on_rotation = on
+          log_line_prefix = '%m [%p-%l] %u@%d app=%a ' # MODIFIED
+          log_timezone = 'America/Toronto'
+          datestyle = 'iso, mdy'
+          timezone = 'America/Toronto'
+          lc_messages = 'C' # MODIFIED
+          lc_monetary = 'en_US.UTF-8'
+          lc_numeric = 'en_US.UTF-8'
+          lc_time = 'en_US.UTF-8'
+          default_text_search_config = 'pg_catalog.english'
+          shared_preload_libraries = 'citus,pg_cron,pg_partman_bgw'
+          ########################################################################
+          # Values not in original config
+          ########################################################################
+          huge_pages = on
+          wal_recycle = off
+          wal_init_zero = off
+          work_mem = 64MB
+          maintenance_work_mem = 1GB
+          autovacuum_work_mem = 64MB
+          effective_io_concurrency = 200
+          wal_compression = on
+          wal_log_hints = on
+          wal_buffers = 64MB
+          checkpoint_timeout = 15min
+          checkpoint_completion_target = 0.9
+          archive_mode = off
+          cpu_tuple_cost = 0.03
+          log_checkpoints = on
+          log_lock_waits = on
+          log_statement = 'ddl'
+          log_temp_files = 0
+          log_autovacuum_min_duration = 0
+          autovacuum_max_workers = 5
+          autovacuum_vacuum_cost_limit = 3000
+          idle_in_transaction_session_timeout = 10min
+          random_page_cost = 4.0
+          effective_cache_size = 94GB
+          ########################################################################
+          # Backup
+          ########################################################################
+          max_locks_per_transaction = '1024'
+          ########################################################################
+          # pg_partman
+          ########################################################################
+          pg_partman_bgw.interval = 3600
+          pg_partman_bgw.role = 'postgres'
+          pg_partman_bgw.dbname = 'postgres'
+          #######################################################################
+          # pg_cron
+          #######################################################################
+          cron.database_name = 'postgres'
+          cron.use_background_workers = on
+          #cron.host = ''
+          cron.timezone = 'EST'
+          max_worker_processes = 20
+          #######################################################################
+          # UNIX Socket
+          #######################################################################
+          unix_socket_directories = '/var/run/postgresql, /tmp'
+          unix_socket_group = ''
+          unix_socket_permissions = 0777
+          #######################################################################
+          # SSL
+          #######################################################################
+          ssl = on
+          ssl_cert_file = 'server.crt'
+          ssl_key_file = 'server.key'
+          #######################################################################
+          # Replication and cluster re-balancing
+          #######################################################################
+          wal_level='logical'
+        state: "present"
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: restarted
+...

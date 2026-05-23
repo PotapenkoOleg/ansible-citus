@@ -1,0 +1,40 @@
+# BEGIN ANSIBLE MANAGED BLOCK
+global
+    maxconn {{ HAPROXY_MAX_CONNECTIONS }}
+
+defaults
+    log     global
+    mode    tcp
+    retries 2
+    timeout client  30m
+    timeout connect 4s
+    timeout server  30m
+    timeout check   5s
+listen stats
+    mode http
+    bind *:{{ HAPROXY_STATISTICS_PORT }}
+    stats enable
+    stats uri /
+
+frontend ft_postgresql
+    bind    *:{{ HAPROXY_POSTGRES_PORT }}
+    default_backend bk_postgres
+
+frontend ft_postgresql_readonly
+    bind    *:{{ HAPROXY_POSTGRES_READONLY_PORT }}
+    default_backend bk_postgres_readonly
+
+backend bk_postgres
+    option  httpchk OPTIONS /leader
+{% for i in range(groups['coordinators']|length) %}
+{{'    server coordinator-0'~(i+1)~'    '~groups['coordinators'][i]~':5432  check port 8008'}}
+{% endfor %}
+
+backend bk_postgres_readonly
+    option  httpchk OPTIONS /leader
+{% for i in range(groups['workers']|length) %}
+{{'    server worker-0'~(i+1)~'    '~groups['workers'][i]~':5432  check port 8008'}}
+{% endfor %}
+
+# END ANSIBLE MANAGED BLOCK
+

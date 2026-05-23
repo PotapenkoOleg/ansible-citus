@@ -1,0 +1,37 @@
+---
+- name: Install Python
+  hosts: all
+  become: yes
+  tasks:
+#    - name: Install Python
+#      ansible.builtin.dnf:
+#        name: python39
+#        state: latest
+#    - name: Install psycopg2
+#      ansible.builtin.dnf:
+#        name: python39-psycopg2
+#        state: latest
+#    - name: Install pyyaml
+#      ansible.builtin.dnf:
+#        name: python39-pyyaml
+#        state: latest
+#    - name: Install pip
+#      ansible.builtin.dnf:
+#        name: python39-pip
+#        state: latest
+    - name: Step 1
+      ansible.builtin.shell:
+        cmd: "alternatives --install /usr/bin/unversioned-python python /usr/bin/python3.9 1"
+    - name: Step 2
+      ansible.builtin.shell:
+        cmd: "alternatives --install /usr/bin/pip pip /usr/bin/pip3.9 1"
+    - name: Step 3
+      ansible.builtin.shell:
+        cmd: "ln -s /usr/bin/python3.9 /usr/bin/python"
+    - name: Step 4
+      ansible.builtin.shell:
+        cmd: "rm /usr/bin/pip"
+    - name: Step 5
+      ansible.builtin.shell:
+        cmd: "ln -s /usr/bin/pip3.9 /usr/bin/pip"
+...

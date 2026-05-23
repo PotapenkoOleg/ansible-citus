@@ -1,0 +1,38 @@
+---
+- name: Install Self Signed Cert
+  hosts: workers
+  become: yes
+  tasks:
+    - name: Step 1
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "openssl genrsa -out rootCA.key 2048"
+    - name: Step 2
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "openssl req -x509 -new -key rootCA.key -days 10000 -out rootCA.crt -batch"
+    - name: Step 3
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "openssl genrsa -out server.key 2048"
+    - name: Step 4
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "openssl req -new -key server.key -out server.csr -batch"
+    - name: Step 5
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 1000"
+    - name: Step 6
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "chmod 600 server.key"
+    - name: Step 7
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "chmod 600 server.crt"
+    - name: Step 8
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "chown -R postgres:postgres /opt/postgres/16"
+...

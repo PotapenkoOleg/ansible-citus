@@ -1,0 +1,8 @@
+---
+- name: debug_test
+  hosts: citus_coordinators
+  tasks:
+    - name: Create {{ package }}
+      debug:
+        msg: "test {{ package }}"
+...

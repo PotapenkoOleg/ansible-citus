@@ -1,0 +1,57 @@
+---
+- name: Install ETCD
+  hosts: etcd_servers
+  become: yes
+  var_files:
+    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+  tasks:
+    - name: Create etcd group
+      group:
+        name: etcd
+        system: yes
+    - name: Create etcd user
+      user:
+        name: etcd
+        group: etcd
+        system: yes
+        shell: "/sbin/nologin"
+    - name: Create etcd data directory
+      file:
+        path: "{{ ETCD_DIRECTORY }}/data"
+        state: directory
+        mode: '0755'
+        owner: etcd
+        group: etcd
+        recurse: yes
+    - name: Download etcd tarball
+      get_url:
+        url: "{{ ETCD_DOWNLOAD_URL }}/{{ ETCD_VERSION }}/etcd-{{ ETCD_VERSION }}-linux-amd64.tar.gz"
+        dest: "{{ ETCD_TAR_FILE }}"
+    - name: Extract etcd tarball
+      unarchive:
+        src: "{{ ETCD_TAR_FILE }}"
+        dest: "{{ ETCD_DIRECTORY }}"
+        remote_src: yes
+        extra_opts:
+          - --strip-components=1
+          - --no-same-owner
+    - name: Remove etcd tarball after extraction
+      file:
+        path: "{{ ETCD_TAR_FILE }}"
+        state: absent
+    - name: Service File Template
+      template:
+        src: etcd.service.j2
+        dest: /etc/systemd/system/etcd.service
+        owner: etcd
+        group: etcd
+        mode: '0644'
+    - name: Reload systemd to recognize etcd service
+      systemd:
+        daemon_reload: yes
+    - name: Start and enable etcd service
+      systemd:
+        name: etcd
+        state: started
+        enabled: yes
+...

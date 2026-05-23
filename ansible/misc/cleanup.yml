@@ -1,0 +1,38 @@
+---
+- name: Remove unused files
+  hosts: workers
+  become: yes
+  tasks:
+    - name: Step 1
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -rf log"
+    - name: Step 2
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f autotune.py"
+    - name: Step 3
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f pg_hba.conf.backup"
+    - name: Step 4
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f postgresql.conf.optimized"
+    - name: Step 5
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f rootCA.crt"
+    - name: Step 6
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f rootCA.key"
+    - name: Step 7
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f rootCA.srl"
+    - name: Step 8
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f server.csr"
+...

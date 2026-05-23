@@ -1,0 +1,13 @@
+---
+- name: debug_test
+  hosts: citus_coordinators
+  vars:
+    users:
+      - user1
+      - user2
+  tasks:
+    - name: Create user
+      loop: "{{ users }}"
+      debug:
+        msg: "User: {{ item }} "
+...

@@ -1,0 +1,12 @@
+---
+- name: Upgrade Citus
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update Citus Package
+      ansible.builtin.shell: sudo yum swap citus121_16 citus131_16 -y
+#    - name: Restart Postgres Service
+#      ansible.builtin.service:
+#        name: patroni
+#        state: restarted
+...

@@ -1,0 +1,34 @@
+---
+- name: Stop Patroni Service on WORKERS DR
+  hosts: workers_dr
+  become: yes
+  tasks:
+    - name: Stop Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: stopped
+- name: Stop Patroni Service on WORKERS PRIMARY
+  hosts: workers_primary
+  become: yes
+  tasks:
+    - name: Stop Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: stopped
+- name: Stop Patroni Service on COORDINATORS DR
+  hosts: coordinators_dr
+  become: yes
+  tasks:
+    - name: Stop Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: stopped
+- name: Stop Patroni Service on COORDINATORS PRIMARY
+  hosts: coordinators_primary
+  become: yes
+  tasks:
+    - name: Stop Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: stopped
+...

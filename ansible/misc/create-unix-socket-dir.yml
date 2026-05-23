@@ -1,0 +1,22 @@
+---
+- name: Create Unix Socket Dir
+  hosts: all
+  become: yes
+  tasks:
+    - name: Stop Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: stopped
+    - name: Remove Directory
+      ansible.builtin.shell: "rm -rf /var/run/postgresql"
+    - name: Create Directory
+      ansible.builtin.shell: "mkdir -p /var/run/postgresql"
+    - name: Change Owner
+      ansible.builtin.shell: "chown postgres:postgres /var/run/postgresql"
+    - name: Change Mode
+      ansible.builtin.shell: "chmod 744 /var/run/postgresql"
+    - name: Enable And Start Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: started
+...

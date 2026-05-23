@@ -1,0 +1,21 @@
+---
+- name: Install neofetch
+  hosts: all
+  become: yes
+  tasks:
+    - name: Refresh DNF cache
+      ansible.builtin.dnf:
+        update_cache: yes
+    - name: Install EPEL RPM
+      ansible.builtin.dnf:
+        name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm'
+        state: present
+    - name: Install EPEL
+      ansible.builtin.dnf:
+        name: 'epel-release'
+        state: latest
+    - name: Install neofetch
+      ansible.builtin.dnf:
+        name: 'neofetch'
+        state: latest
+...

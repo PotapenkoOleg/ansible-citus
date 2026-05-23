@@ -1,0 +1,11 @@
+---
+- name: debug_test
+  hosts: citus_coordinators
+  vars:
+    leader_ip: "127.0.0.1"
+  tasks:
+    - name: Facts
+      debug:
+        msg: "{{ ansible_facts.default_ipv4.address }}"
+      when: "ansible_facts.default_ipv4.address == leader_ip"
+...

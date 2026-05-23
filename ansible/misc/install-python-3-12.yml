@@ -1,0 +1,18 @@
+---
+- name: Install Python
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Python 3.12
+      ansible.builtin.dnf:
+        name: python3.12
+        state: latest
+    - name: Install psycopg2
+      ansible.builtin.dnf:
+        name: python3.12-psycopg2
+        state: latest
+    - name: Install pyyaml
+      ansible.builtin.dnf:
+        name: python3.12-pyyaml
+        state: latest
+...

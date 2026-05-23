@@ -1,0 +1,148 @@
+---
+- name: Install Patroni
+  hosts: patroni_servers
+  become: yes
+  var_files:
+    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+  tasks:
+    - name: Create patroni group
+      group:
+        name: patroni
+        system: yes
+    - name: Create patroni
+      user:
+        name: patroni
+        group: patroni
+        system: yes
+        shell: "/sbin/nologin"
+    - name: Install Python
+      ansible.builtin.dnf:
+        name: python{{ PYTHON_VERSION }}
+        state: latest
+    - name: Install pip
+      ansible.builtin.dnf:
+        name: pip
+        state: latest
+    - name: Install psycopg2
+      ansible.builtin.dnf:
+        name: python{{ PYTHON_MAJOR_VERSION }}-psycopg2
+        state: latest
+    - name: Install pyyaml
+      ansible.builtin.dnf:
+        name: python{{ PYTHON_MAJOR_VERSION }}-pyyaml
+        state: latest
+    - name: Create patroni extract directory
+      file:
+        path: "{{ PATRONI_DIRECTORY }}"
+        state: directory
+        mode: '0755'
+        owner: postgres
+        group: postgres
+        recurse: yes
+    - name: Download patroni tarball
+      get_url:
+        url: "{{ PATRONI_DOWNLOAD_URL }}"
+        dest: "{{ PATRONI_TAR_FILE }}"
+    - name: Extract patroni tarball
+      unarchive:
+        src: "{{ PATRONI_TAR_FILE }}"
+        dest: "{{ PATRONI_DIRECTORY }}"
+        remote_src: yes
+        extra_opts:
+          - --strip-components=1
+          - --no-same-owner
+    - name: Remove patroni tarball after extraction
+      file:
+        path: "{{ PATRONI_TAR_FILE }}"
+        state: absent
+    - name: Install patroni using pip
+      pip:
+        chdir: "{{ PATRONI_DIRECTORY }}"
+        name: patroni[psycopg3,etcd3,systemd]
+        state: present
+    - name: Load softdog kernel module
+      ansible.builtin.command: modprobe softdog
+    - name: change permissions of /dev/watchdog
+      ansible.builtin.file:
+        path: /dev/watchdog
+        owner: postgres
+        group: postgres
+        mode: '0750' #
+    - name: Create patroni config directory
+      file:
+        path: "/etc/patroni"
+        state: directory
+        mode: '0755'
+        owner: postgres
+        group: postgres
+        recurse: yes
+    - name: Config File Template
+      template:
+        src: patroni.config.yml.j2
+        dest: /etc/patroni/{{ PATRONI_CLUSTER_NAME }}.yml
+        owner: postgres
+        group: postgres
+        mode: '0644'
+    - name: Service File Template
+      template:
+        src: patroni.service.j2
+        dest: /etc/systemd/system/patroni.service
+        owner: patroni
+        group: patroni
+        mode: '0644'
+    - name: Reload systemd to recognize service
+      systemd:
+        daemon_reload: yes
+- name: Start Patroni Service on COORDINATORS PRIMARY
+  hosts: coordinators_primary
+  become: yes
+  tasks:
+    - name: Start Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: started
+- name: Start Patroni Service on COORDINATORS DR
+  hosts: coordinators_dr
+  become: yes
+  vars:
+    POSTGRES_VERSION: "17" # TODO: Change this to the actual Postgres version
+    POSTGRES_ROOT_DIRECTORY: "/opt/postgres" # TODO: Change this to the actual postgres directory
+    POSTGRES_DATA_DIRECTORY: "{{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data"
+  tasks:
+    - name: Remove Old Data Directory
+      ansible.builtin.shell: "rm -rf {{ POSTGRES_DATA_DIRECTORY }}"
+    - name: Start Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: started
+- name: Start Patroni Service on WORKERS PRIMARY
+  hosts: workers_primary
+  become: yes
+  tasks:
+    - name: Start Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: started
+- name: Start Patroni Service on WORKERS DR
+  hosts: workers_dr
+  become: yes
+  vars:
+    POSTGRES_VERSION: "17"  # TODO: Change this to the actual Postgres version
+    POSTGRES_ROOT_DIRECTORY: "/opt/postgres" # TODO: Change this to the actual postgres directory
+    POSTGRES_DATA_DIRECTORY: "{{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data"
+  tasks:
+    - name: Remove Old Data Directory
+      ansible.builtin.shell: "rm -rf {{ POSTGRES_DATA_DIRECTORY }}"
+    - name: Start Patroni Service
+      ansible.builtin.service:
+        name: patroni
+        state: started
+- name: Enable Patroni
+  hosts: patroni_servers
+  become: yes
+  tasks:
+    - name: Enable patroni service
+      systemd:
+        name: patroni
+        enabled: yes
+...

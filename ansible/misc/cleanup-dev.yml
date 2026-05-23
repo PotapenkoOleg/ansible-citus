@@ -1,0 +1,62 @@
+---
+- name: Remove unused files
+  hosts: all
+  become: yes
+  tasks:
+    - name: Step 1
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -rf log"
+    - name: Step 2
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f optimize.py"
+    - name: Step 3
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f pg_hba.conf.backup"
+    - name: Step 3_2
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f pg_hba.conf.old"
+    - name: Step 3_3
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f delete_old_cluster.sh"
+    - name: Step 3_4
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f pg_ident.conf.old"
+    - name: Step 4
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f postgresql.conf.optimized"
+    - name: Step 4
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f postgresql.conf.old"
+    - name: Step 4
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f postgresql.conf.backup"
+    - name: Step 5
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f rootCA.crt"
+    - name: Step 6
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f rootCA.key"
+    - name: Step 7
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f rootCA.srl"
+    - name: Step 8
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f server.csr"
+    - name: Step 9
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/16/data"
+        cmd: "rm -f update_extensions.sql"
+...

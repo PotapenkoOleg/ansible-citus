@@ -1,0 +1,126 @@
+---
+- name: Upgrade Postgres 15 to 16
+  hosts: all
+  become: yes
+  tasks:
+#    - name: Add Citus repository for package manager
+#      ansible.builtin.shell: curl https://install.citusdata.com/community/rpm.sh | bash
+#    - name: Install Postgres with Citus extension
+#      ansible.builtin.dnf:
+#        name: citus121_16
+#        state: latest
+#    - name: Initialize system database
+#      ansible.builtin.shell: /usr/pgsql-16/bin/postgresql-16-setup initdb
+#    - name: Install PG Cron
+#      ansible.builtin.dnf:
+#        name: pg_cron_16
+#        state: latest
+#    - name: Install PG Jobmon
+#      ansible.builtin.dnf:
+#        name: pg_jobmon_16
+#        state: latest
+#    - name: Install PG Partman
+#      ansible.builtin.dnf:
+#        name: pg_partman_16
+##        state: latest
+#    - name: Step 1
+#      ansible.builtin.shell: "chown -R postgres:postgres /var/lib/pgsql/16/data"
+#    - name: Step 2
+#      ansible.builtin.shell: "mv /var/lib/pgsql/16/data/postgresql.conf /var/lib/pgsql/16/data/postgresql.conf.old"
+#    - name: Step 3
+#      ansible.builtin.shell: "mv /var/lib/pgsql/16/data/pg_hba.conf /var/lib/pgsql/16/data/pg_hba.conf.old"
+#    - name: Step 4
+#      ansible.builtin.shell: "mv /var/lib/pgsql/16/data/pg_ident.conf /var/lib/pgsql/16/data/pg_ident.conf.old"
+#    - name: Step 5
+#      ansible.builtin.shell: "cp /var/lib/pgsql/15/data/postgresql.conf /var/lib/pgsql/16/data/postgresql.conf"
+#    - name: Step 6
+#      ansible.builtin.shell: "cp /var/lib/pgsql/15/data/pg_hba.conf /var/lib/pgsql/16/data/pg_hba.conf"
+#    - name: Step 7
+#      ansible.builtin.shell: "cp /var/lib/pgsql/15/data/pg_ident.conf /var/lib/pgsql/16/data/pg_ident.conf"
+#    - name: Step 8
+#      ansible.builtin.shell: "mkdir -p /opt/postgres/16"
+#    - name: Step 9
+#      ansible.builtin.shell: "mkdir /opt/postgres/16/data"
+#    - name: Step 10
+#      ansible.builtin.shell: "mkdir /opt/postgres/16/log"
+#    - name: Step 11
+#      ansible.builtin.shell: "chmod 750 /opt/postgres/16/data"
+#    - name: Step 12
+#      ansible.builtin.shell: "chmod 776 /opt/postgres/16/log"
+#    - name: Step 13
+#      ansible.builtin.shell: "cp -R /var/lib/pgsql/16/data /opt/postgres/16"
+#    - name: Step 14
+#      ansible.builtin.shell: "chown -R postgres:postgres /opt/postgres/16"
+#    - name: Change Log Directory
+#      ansible.builtin.lineinfile:
+#        path: /opt/postgres/16/data/postgresql.conf
+#        regexp: "^log_directory = 'log'"
+#        line: "log_directory = '/opt/postgres/16/data/log'"
+#    - name: Create Postgres 16 Service Directory
+#      ansible.builtin.shell: "mkdir -p /etc/systemd/system/postgresql-16.service.d"
+#    - name: Create Postgres 16 Service File
+#      ansible.builtin.shell: "touch /etc/systemd/system/postgresql-16.service.d/override.conf"
+#    - name: Add access
+#      ansible.builtin.blockinfile:
+#        path: "/etc/systemd/system/postgresql-16.service.d/override.conf"
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+#        block: |
+#          [Service]
+#          Environment=PGDATA=/opt/postgres/16/data/
+#        state: "present"
+#    - name: Reload Service Config
+#      ansible.builtin.shell: "systemctl daemon-reload"
+    ### SELECT citus_prepare_pg_upgrade();
+#    - name: Stop Postgres Service
+#      ansible.builtin.service:
+#        name: postgresql-15
+#        state: stopped
+#    - name: Check upgrade
+#      ansible.builtin.shell: "runuser -u postgres -- /usr/pgsql-16/bin/pg_upgrade -b /usr/pgsql-15/bin -B /usr/pgsql-16/bin/ -d /var/lib/pgsql/15/data -D /opt/postgres/16/data/ --check"
+#      args:
+#        chdir: "/opt/postgres/16/data"
+#    - name: Upgrade
+#      ansible.builtin.shell: "runuser -u postgres -- /usr/pgsql-16/bin/pg_upgrade -b /usr/pgsql-15/bin -B /usr/pgsql-16/bin/ -d /var/lib/pgsql/15/data -D /opt/postgres/16/data/ "
+#      args:
+#        chdir: "/opt/postgres/16/data"
+#    - name: Enable And Start Postgres 16 Service
+#      ansible.builtin.service:
+#        name: postgresql-16
+#        state: started
+#        enabled: yes
+#    - name: Disable And Stop Postgres 15 Service
+#      ansible.builtin.service:
+#        name: postgresql-16
+#        state: started
+#        enabled: yes
+#    - name: Remove old cluster
+#      ansible.builtin.shell: "bash /opt/postgres/16/data/delete_old_cluster.sh"
+#      args:
+#        chdir: "/opt/postgres/16/data"
+#    - name: Remove old directory step 1
+#      ansible.builtin.shell: "rm -rf /var/lib/pgsql/14"
+#    - name: Remove old directory step 2
+#      ansible.builtin.shell: "rm -rf /var/lib/pgsql/15"
+#    - name: Remove old directory step 3
+#      ansible.builtin.shell: "rm -rf /var/lib/pgsql/16"
+#    - name: Remove Old PG Cron
+#      ansible.builtin.dnf:
+#        name: pg_cron_15
+#        state: absent
+#    - name: Remove Old PG Jobmon
+#      ansible.builtin.dnf:
+#        name: pg_jobmon_15
+#        state: absent
+#    - name: Remove Old PG Partman
+#      ansible.builtin.dnf:
+#        name: pg_partman_15
+#        state: absent
+#    - name: Remove Old Citus
+#      ansible.builtin.dnf:
+#        name: citus121_15
+#        state: absent
+    - name: Remove old service directory
+      ansible.builtin.shell: "rm -rf /etc/systemd/system/postgresql-15.service"
+    - name: Remove old service directory
+      ansible.builtin.shell: "rm -rf /etc/systemd/system/postgresql-15.service.d"
+...

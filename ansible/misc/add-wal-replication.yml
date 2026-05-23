@@ -1,0 +1,15 @@
+---
+- name: Update postgresql.conf
+  hosts: workers
+  become: yes
+  tasks:
+    - name: Add LOGICAL Replication
+      ansible.builtin.lineinfile:
+        path: "/opt/postgres/16/data/postgresql.conf"
+        line: "wal_level='logical'"
+        state: "present"
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: restarted
+...

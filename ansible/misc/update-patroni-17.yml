@@ -1,0 +1,25 @@
+---
+- name: Update Patroni Configuration
+  hosts: all
+  become: yes
+  vars:
+    OLD_POSTGRES_VERSION: "16"
+    NEW_POSTGRES_VERSION: "17"
+    POSTGRES_ROOT_DIR: "/opt/postgres"
+    POSTGRES_DEFAULT_DIR: "/var/lib/pgsql"
+  tasks:
+    - name: Remove Patroni Config
+      ansible.builtin.shell: "rm -f /etc/patroni/dev-citus.{{ NEW_POSTGRES_VERSION }}.yml"
+    - name: Backup Patroni Config
+      ansible.builtin.shell: "cp /etc/patroni/dev-citus.yml /etc/patroni/dev-citus.{{ NEW_POSTGRES_VERSION }}.yml"
+    - name: Change Data Directory
+      ansible.builtin.lineinfile:
+        path: "/etc/patroni/dev-citus.{{ NEW_POSTGRES_VERSION }}.yml"
+        regexp: "  data_dir: {{ POSTGRES_ROOT_DIR}}/{{ OLD_POSTGRES_VERSION }}/data/"
+        line: "  data_dir: {{ POSTGRES_ROOT_DIR }}/{{ NEW_POSTGRES_VERSION }}/data/"
+    - name: Change Data Directory
+      ansible.builtin.lineinfile:
+        path: "/etc/patroni/dev-citus.{{ NEW_POSTGRES_VERSION }}.yml"
+        regexp: "  bin_dir: /usr/pgsql-{{ OLD_POSTGRES_VERSION }}/bin"
+        line: "  bin_dir: /usr/pgsql-{{ NEW_POSTGRES_VERSION }}/bin"
+...

@@ -1,0 +1,10 @@
+---
+- name: Remove unused files
+  hosts: dr
+  become: yes
+  tasks:
+    - name: Step 1
+      ansible.builtin.shell:
+        chdir: "/opt/postgres/17/data"
+        cmd: "rm -rf *"
+...

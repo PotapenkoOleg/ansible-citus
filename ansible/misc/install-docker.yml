@@ -1,0 +1,57 @@
+---
+- name: Install Docker
+  hosts: citus_coordinators
+  become: yes
+  tasks:
+    - name: Remove Existing Docker
+      dnf:
+        name:
+          - docker
+          - docker-client
+          - docker-client-latest
+          - docker-common
+          - docker-latest
+          - docker-latest-logrotate
+          - docker-logrotate
+          - docker-selinux
+          - docker-engine-selinux
+          - docker-engine
+        state: absent
+    - name: Install Required Packages
+      dnf:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+    - name: Add Docker CE repository
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+    - name: Install Docker CE
+      dnf:
+        name: docker-ce
+        state: present
+    - name: Start and Enable Docker Service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+    - name: Add current user to the Docker group
+      user:
+        name: 'ansible-pg'
+        groups: docker
+        append: yes
+    - name: Install Docker Compose
+      get_url:
+        url: 'https://github.com/docker/compose/releases/tag/v2.24.7/docker-compose-linux-x86_64'
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+    - name: Create Symlink for Docker Compose
+      file:
+        src: /usr/local/bin/docker-compose
+        dest: /usr/bin/docker-compose
+        state: link
+#    - name: Restart the machine
+#      reboot:
+...

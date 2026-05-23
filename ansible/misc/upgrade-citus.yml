@@ -1,0 +1,14 @@
+---
+- name: Upgrade Citus
+  hosts: all
+  become: yes
+  tasks:
+#    - name: Get Postrges Version
+#      ansible.builtin.shell: psql -U postgres -c "SELECT VERSION();"
+    - name: Update Citus Package
+      ansible.builtin.shell: sudo yum swap citus111_15 citus121_15 -y
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: postgresql-15
+        state: restarted
+...

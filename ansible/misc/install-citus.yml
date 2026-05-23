@@ -1,0 +1,326 @@
+---
+- name: Install Citus
+  hosts: workers
+  become: yes
+  tasks:
+    - name: Add Citus repository for package manager
+      ansible.builtin.shell: curl https://install.citusdata.com/community/rpm.sh | bash
+    - name: Install Postgres with Citus extension
+      ansible.builtin.dnf:
+        name: citus121_16
+        state: latest
+    - name: Initialize system database
+      ansible.builtin.shell: /usr/pgsql-16/bin/postgresql-16-setup initdb
+    - name: Preload citus extension
+      ansible.builtin.shell: echo "shared_preload_libraries = 'citus'" | sudo tee -a /var/lib/pgsql/16/data/postgresql.conf
+    - name: Configure Connection and Authentication
+      ansible.builtin.lineinfile:
+        path: /var/lib/pgsql/16/data/postgresql.conf
+        regexp: '^#listen_addresses = '
+        line: listen_addresses = '*'
+    - name: Remove default access
+      ansible.builtin.blockinfile:
+        path: /var/lib/pgsql/16/data/pg_hba.conf
+        marker_begin: "# TYPE  DATABASE        USER            ADDRESS                 METHOD"
+        marker_end: "host    replication     all             ::1/128                 scram-sha-256"
+        marker: "{mark}"
+        block: |
+
+          # "local" is for Unix domain socket connections only
+          local   all             all                                     peer
+          # IPv4 local connections:
+          host    all             all             127.0.0.1/32            scram-sha-256
+          # IPv6 local connections:
+          host    all             all             ::1/128                 scram-sha-256
+          # Allow replication connections from localhost, by a user with the
+          # replication privilege.
+          local   replication     all                                     peer
+          host    replication     all             127.0.0.1/32            scram-sha-256
+        state: "absent"
+    - name: Add access
+      ansible.builtin.blockinfile:
+        path: /var/lib/pgsql/16/data/pg_hba.conf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+          # "local" is for Unix domain socket connections only
+          local   all             all                                     trust
+          # IPv4 local connections (pg_cron):
+          host    all             all             127.0.0.1/32            trust
+          # IPv6 local connections:
+          host    all             all             ::1/128                 trust
+          # Citus
+          # Primary Site
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          # Disaster Recovery Site
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          host    all             all            host.localdomain.local trust
+          # Local Domain Class A
+          host    all             all             127.0.0.1/8              scram-sha-256
+          # Jump Server Range
+          host    all             all             127.0.0.1/16           scram-sha-256
+          # Allow replication connections from localhost, by a user with the
+          # replication privilege.
+          host    replication     rep_user        127.0.0.1/8              scram-sha-256
+        state: "present"
+    - name: Start Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: started
+        enabled: yes
+    - name: Set Postgres Password
+      ansible.builtin.shell: psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'pUh2pHifRjKAFo8';"
+    - name: Install Python
+      ansible.builtin.dnf:
+        name: python3.11
+        state: latest
+    - name: Install PG Cron
+      ansible.builtin.dnf:
+        name: pg_cron_16
+        state: latest
+    - name: Install PG Jobmon
+      ansible.builtin.dnf:
+        name: pg_jobmon_16
+        state: latest
+    - name: Install PG Partman
+      ansible.builtin.dnf:
+        name: pg_partman_16
+        state: latest
+    - name: Copy Optimize Script
+      copy:
+        src: /home/filestream/autotune.py
+        dest: /var/lib/pgsql/16/data/
+        owner: 'filestream'
+        mode: '0644'
+    - name: Run Optimize Script
+      ansible.builtin.shell:
+        chdir: '/var/lib/pgsql/16/data'
+        cmd: 'python3.11 ./autotune.py'
+    - name: Create New Postgres Directory
+      file:
+        path: /opt/postgres/16
+        state: directory
+        owner: postgres
+        group: postgres
+    - name: Create New Data Directory
+      file:
+        path: /opt/postgres/16/data
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: 0750
+    - name: Create New Log Directory
+      file:
+        path: /opt/postgres/16/log
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: 0776
+    - name: Stop Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: stopped
+    - name: Create New Service Override Directory
+      ansible.builtin.file:
+        path: "/etc/systemd/system/postgresql-16.service.d"
+        state: directory
+    - name: Create New Service Override File With New Data Directory Location
+      ansible.builtin.copy:
+        dest: "/etc/systemd/system/postgresql-16.service.d/override.conf"
+        content: |
+          [Service]
+          Environment=PGDATA=/opt/postgres/16/data/
+        force: yes
+    - name: Service Daemon reload config
+      ansible.builtin.shell: "systemctl daemon-reload"
+    - name: Move Postgres Data Directory to /opt
+      ansible.builtin.shell: "cp -R /var/lib/pgsql/16/data /opt/postgres/16"
+    - name: Set Postgres Data Directory Permissions
+      ansible.builtin.shell: "chmod 750 /opt/postgres/16/data"
+    - name: Set Postgres Data Directory Permissions
+      ansible.builtin.shell: "chmod 776 /opt/postgres/16/log"
+    - name: Move Postgres Directory Ownership
+      ansible.builtin.shell: "chown -R postgres:postgres /opt/postgres/16"
+    - name: Start Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: started
+    - name: Remove Old Data Directory
+      ansible.builtin.file:
+        path: "/var/lib/pgsql/16"
+        state: absent
+    - name: Stop Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: stopped
+    - name: Update Config 1
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf.optimized
+        regexp: '^max_connections = 100 # MODIFIED'
+        line: "max_connections = 1000 # MODIFIED"
+    - name: Update Config 2
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf.optimized
+        regexp: '^log_directory = '
+        line: "log_directory = '/opt/postgres/16/log' # MODIFIED"
+    - name: Update Config 3
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf.optimized
+        regexp: "^shared_preload_libraries = 'citus'"
+        line: "shared_preload_libraries = 'citus,pg_cron,pg_partman_bgw'"
+    - name: Update Config 4
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf.optimized
+        regexp: "^random_page_cost = 4.0"
+        line: "random_page_cost = 1.1"
+    - name: Update Config 5
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf.optimized
+        regexp: "^effective_cache_size = 82GB"
+        line: "effective_cache_size = 94GB"
+    - name: Update Config 6
+      ansible.builtin.copy:
+        dest: "/opt/postgres/16/data/postgresql.conf.optimized"
+        content: |
+          max_locks_per_transaction = '1024'
+          ########################################################################
+          # CRON CONFIGURATION
+          ########################################################################
+          cron.database_name = 'postgres'
+          cron.use_background_workers = on
+          #cron.host = ''
+          cron.timezone = 'EST'
+          max_worker_processes = 20
+          ########################################################################
+          # pg_partman
+          ########################################################################
+          pg_partman_bgw.interval = 3600
+          pg_partman_bgw.role = 'postgres'
+          pg_partman_bgw.dbname = 'postgres'
+          #######################################################################
+          # UNIX Socket
+          #######################################################################
+          unix_socket_directories = '/var/run/postgresql, /tmp'
+          unix_socket_group = ''
+          unix_socket_permissions = 0777
+          #######################################################################
+          ssl = on
+          ssl_cert_file = 'server.crt'
+          ssl_key_file = 'server.key'
+        force: yes
+    - name: Update Config 7
+      ansible.builtin.copy:
+        dest: "/opt/postgres/16/data/postgresql.conf.optimized"
+        content: |
+          listen_addresses = '*' # MODIFIED
+          max_connections = 1000 # MODIFIED
+          shared_buffers = 10GB # MODIFIED
+          dynamic_shared_memory_type = posix
+          max_wal_size = 15GB # MODIFIED
+          min_wal_size = 80MB
+          log_destination = 'stderr'
+          logging_collector = on # MODIFIED
+          log_directory = '/opt/postgres/16/log' # MODIFIED
+          log_filename = 'postgresql-%a.log'
+          log_rotation_age = 1d
+          log_rotation_size = 0
+          log_truncate_on_rotation = on
+          log_line_prefix = '%m [%p-%l] %u@%d app=%a ' # MODIFIED
+          log_timezone = 'America/Toronto'
+          datestyle = 'iso, mdy'
+          timezone = 'America/Toronto'
+          lc_messages = 'C' # MODIFIED
+          lc_monetary = 'en_US.UTF-8'
+          lc_numeric = 'en_US.UTF-8'
+          lc_time = 'en_US.UTF-8'
+          default_text_search_config = 'pg_catalog.english'
+          shared_preload_libraries = 'citus,pg_cron,pg_partman_bgw'
+          cron.database_name = 'postgres'
+          cron.use_background_workers = on
+          #cron.host = ''
+          cron.timezone = 'EST'
+          max_worker_processes = 20
+          ########################################################################
+          # Values not in original config
+          ########################################################################
+          huge_pages = on
+          wal_recycle = off
+          wal_init_zero = off
+          work_mem = 64MB
+          maintenance_work_mem = 1GB
+          autovacuum_work_mem = 64MB
+          effective_io_concurrency = 200
+          wal_compression = on
+          wal_log_hints = on
+          wal_buffers = 64MB
+          checkpoint_timeout = 15min
+          checkpoint_completion_target = 0.9
+          archive_mode = off
+          #archive_command = 'test ! -f /opt/postgres/archive/%f && cp %p /opt/postgres/archive/%f'
+          cpu_tuple_cost = 0.03
+          log_checkpoints = on
+          log_lock_waits = on
+          log_statement = 'ddl'
+          log_temp_files = 0
+          log_autovacuum_min_duration = 0
+          autovacuum_max_workers = 5
+          autovacuum_vacuum_cost_limit = 3000
+          idle_in_transaction_session_timeout = 10min
+          random_page_cost = 1.1
+          effective_cache_size = 94GB
+          max_locks_per_transaction = '1024'
+          ########################################################################
+          # pg_partman
+          ########################################################################
+          pg_partman_bgw.interval = 3600
+          pg_partman_bgw.role = 'postgres'
+          pg_partman_bgw.dbname = 'postgres'
+          #######################################################################
+          # UNIX Socket
+          #######################################################################
+          unix_socket_directories = '/var/run/postgresql, /tmp'
+          unix_socket_group = ''
+          unix_socket_permissions = 0777
+          #######################################################################
+          ssl = on
+          ssl_cert_file = 'server.crt'
+          ssl_key_file = 'server.key'
+        force: yes
+    - name: Backup Current Config
+      ansible.builtin.shell: "mv /opt/postgres/16/data/postgresql.conf postgresql.conf.backup"
+    - name: Replace With Optimized
+      ansible.builtin.shell: "cp /opt/postgres/16/data/postgresql.conf.optimized postgresql.conf"
+    - name: Enable SSL
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf
+        regexp: "^#ssl = on"
+        line: "ssl = on"
+    - name: Enable SSL - CERT FILE
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf
+        regexp: "^#ssl_cert_file = 'server.crt'"
+        line: "ssl_cert_file = 'server.crt'"
+    - name: Enable SSL - KEY FILE
+      ansible.builtin.lineinfile:
+        path: /opt/postgres/16/data/postgresql.conf
+        regexp: "^#ssl_key_file = 'server.key'"
+        line: "ssl_key_file = 'server.key'"
+    - name: Restart Postgres Service
+      ansible.builtin.service:
+        name: postgresql-16
+        state: restarted
+...

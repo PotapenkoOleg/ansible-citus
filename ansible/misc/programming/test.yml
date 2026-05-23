@@ -1,0 +1,10 @@
+---
+- name: debug_test
+  hosts: citus_coordinators
+  vars:
+    user: test_user
+  tasks:
+    - name: Create {{ user }}
+      debug:
+        msg: test {{ user }}
+...

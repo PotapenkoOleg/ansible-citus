@@ -1,0 +1,151 @@
+---
+- name: Install Postgres
+  hosts: postgres_servers
+  become: yes
+  var_files:
+    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+  tasks:
+    - name: Create postgres group
+      group:
+        name: postgres
+        system: yes
+    - name: Create postgres user
+      user:
+        name: postgres
+        group: postgres
+        system: yes
+        shell: "/sbin/nologin"
+    - name: Add Citus Repository For DNF
+      ansible.builtin.shell: curl https://install.citusdata.com/community/rpm.sh | bash
+    - name: Install PG Cron
+      ansible.builtin.dnf:
+        name: pg_cron_{{ POSTGRES_VERSION }}
+        state: latest
+    - name: Install PG Jobmon
+      ansible.builtin.dnf:
+        name: pg_jobmon_{{ POSTGRES_VERSION }}
+        state: latest
+    - name: Install PG Partman
+      ansible.builtin.dnf:
+        name: pg_partman_{{ POSTGRES_VERSION }}
+        state: latest
+    - name: Install Postgres with Citus extension
+      ansible.builtin.dnf:
+        name: citus{{ CITUS_VERSION }}_{{ POSTGRES_VERSION }}
+        state: latest
+    - name: Initialize system database
+      ansible.builtin.shell: sudo runuser -u postgres -- /usr/pgsql-{{POSTGRES_VERSION}}/bin/initdb --pgdata=/var/lib/pgsql/{{POSTGRES_VERSION}}/data -A scram-sha-256 --auth-local=peer
+    - name: Create Unix Socket Directory
+      ansible.builtin.file:
+        path: /var/run/postgresql
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0744'
+    - name: Create Postgres Root Directory
+      ansible.builtin.file:
+        path: "{{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0744'
+    - name: Create Postgres Data Directory
+      ansible.builtin.file:
+        path: "{{ POSTGRES_DATA_DIRECTORY }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0750'
+    - name: Create Postgres Log Directory
+      ansible.builtin.file:
+        path: "{{POSTGRES_LOG_DIRECTORY }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0750'
+    - name: Copy Postgres Data Directory to New Location
+      ansible.builtin.shell: "cp -R {{ POSTGRES_DEFAULT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data {{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}"
+    - name: Remove Old Data Directory
+      ansible.builtin.shell: "rm -rf {{ POSTGRES_DEFAULT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data"
+    - name: Config pg_hba.conf file template
+      template:
+        src: pg_hba.conf.j2
+        dest: "{{ POSTGRES_DATA_DIRECTORY }}/pg_hba.conf"
+        owner: postgres
+        group: postgres
+        mode: '0750'
+    - name: Config postgresql.conf file template
+      template:
+        src: postgresql.conf.j2
+        dest: "{{ POSTGRES_DATA_DIRECTORY }}/postgresql.conf"
+        owner: postgres
+        group: postgres
+        mode: '0750'
+    - name: Create Postgres Service Directory
+      ansible.builtin.file:
+        path: "/etc/systemd/system/postgresql-{{ POSTGRES_VERSION }}.service.d"
+        state: directory
+        recurse: yes
+    - name: Create Postgres Service File
+      template:
+        src: postgres.service.j2
+        dest: "/etc/systemd/system/postgresql-{{ POSTGRES_VERSION }}.service.d/override.conf"
+        owner: postgres
+        group: postgres
+        mode: '0750'
+    - name: Reload Service Config
+      ansible.builtin.shell: "systemctl daemon-reload"
+    - name: Install Self Signed Cert - Step 1
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "openssl genrsa -out rootCA.key 2048"
+    - name: Install Self Signed Cert - Step 2
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "openssl req -x509 -new -key rootCA.key -days 10000 -out rootCA.crt -batch"
+    - name: Install Self Signed Cert - Step 3
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "openssl genrsa -out server.key 2048"
+    - name: Install Self Signed Cert - Step 4
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "openssl req -new -key server.key -out server.csr -batch"
+    - name: Install Self Signed Cert - Step 5
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 1000"
+    - name: Install Self Signed Cert - Step 6
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "chmod 600 server.key"
+    - name: Install Self Signed Cert - Step 7
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "chmod 600 server.crt"
+    - name: Fix Data Directory Ownership
+      ansible.builtin.shell:
+        chdir: "{{ POSTGRES_DATA_DIRECTORY }}"
+        cmd: "chown -R postgres:postgres {{ POSTGRES_DATA_DIRECTORY }}"
+    - name: Enable And Start Postgres Service
+      ansible.builtin.service:
+        name: postgresql-{{ POSTGRES_VERSION }}
+        enabled: yes
+        state: started
+    - name: Set Postgres Password
+      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "ALTER USER postgres WITH PASSWORD '{{POSTGRES_SUPERUSER_PASSWORD}}';"
+    - name: Set Postgres Replication User Password
+      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REPLICATION_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REPLICATION_PASSWORD }}';"
+# TODO: Uncomment the following task if Rewind user is different from Replication user
+#    - name: Set Postgres Rewind User Password
+#      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REWIND_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REWIND_PASSWORD }}';"
+    - name: Create Distributed DB managed by Patroni
+      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE DATABASE {{PATRONI_CITUS_DB_NAME}};"
+    - name: Create Citus Extension
+      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -d {{PATRONI_CITUS_DB_NAME}} -c "CREATE EXTENSION citus;"
+    - name: Disable And Stop Postgres Service
+      ansible.builtin.service: # STOP SERVICE - Patroni will manage it
+        name: postgresql-{{ POSTGRES_VERSION }}
+        enabled: no
+        state: stopped
+...
