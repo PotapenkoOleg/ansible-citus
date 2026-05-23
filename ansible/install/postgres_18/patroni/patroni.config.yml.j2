@@ -1,0 +1,139 @@
+# BEGIN ANSIBLE MANAGED BLOCK
+{% set etcd_server_list = [] %}
+{% set outer_ns = {'patroni_name': '', 'patroni_group': '', 'patroni_ip': ''} %}
+{% for i in range(groups['coordinators_primary']|length) %}
+{% if groups['coordinators_primary'][i] in ansible_all_ipv4_addresses %}
+{% set _ = outer_ns.update({'patroni_name': 'coordinator-pr-' ~ (i+1), 'patroni_group': 0, 'patroni_ip': groups['coordinators_primary'][i] }) %}
+{% endif %}
+{% endfor %}
+{% for i in range(groups['coordinators_dr']|length) %}
+{% if groups['coordinators_dr'][i] in ansible_all_ipv4_addresses %}
+{% set _ = outer_ns.update({'patroni_name': 'coordinator-dr-' ~ (i+1+groups['coordinators_primary']|length), 'patroni_group': 0, 'patroni_ip': groups['coordinators_dr'][i] }) %}
+{% endif %}
+{% endfor %}
+{% for i in range(groups['workers_primary']|length) %}
+{% if groups['workers_primary'][i] in ansible_all_ipv4_addresses %}
+{% set _ = outer_ns.update({'patroni_name': 'worker-pr-' ~ (i+1), 'patroni_group': (i+1), 'patroni_ip': groups['workers_primary'][i] }) %}
+{% endif %}
+{% endfor %}
+{% for i in range(groups['workers_dr']|length) %}
+{% if groups['workers_dr'][i] in ansible_all_ipv4_addresses %}
+{% set _ = outer_ns.update({'patroni_name': 'worker-dr-' ~ (i+1+groups['workers_primary']|length), 'patroni_group': (i+1), 'patroni_ip': groups['workers_dr'][i] }) %}
+{% endif %}
+{% endfor %}
+scope: {{ PATRONI_CLUSTER_NAME }}
+name: {{ outer_ns.patroni_name}}
+
+citus:
+  group: {{ outer_ns.patroni_group}}
+  database: {{ PATRONI_CITUS_DB_NAME }}
+
+restapi:
+  listen: {{ outer_ns.patroni_ip }}:8008
+  connect_address: {{ outer_ns.patroni_ip }}:8008
+
+{% set etcd_server_list = [] %}
+{% for i in range(groups['etcd_servers']|length) %}
+{% set _ = etcd_server_list.append(groups['etcd_servers'][i] ~ ':2379') %}
+{% endfor %}
+etcd3:
+  hosts: {{ etcd_server_list|join(',') }}
+
+bootstrap:
+  dcs:
+    ttl: 30
+    loop_wait: 10
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    postgresql:
+      use_pg_rewind: true
+      use_slots: true
+      parameters:
+        wal_level: logical
+        wal_log_hints: 'on'
+
+  initdb:
+    - encoding: UTF8
+    - data-checksums
+
+  pg_hba:
+    # BEGIN ANSIBLE MANAGED BLOCK
+
+    # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+    # Local connections
+    - local   all             all                                     trust
+
+    # IPv4 local connections:
+    - host    all             all           127.0.0.1/32              trust
+
+    # IPv6 local connections:
+    - host    all             all           ::1/128                   trust
+
+    # Jump server
+    # - host    all             all           {{ JUMP_SERVER_IP }}      scram-sha-256
+
+    # Local Domain Class A
+    # - host    all             all             127.0.0.1/8              scram-sha-256
+
+    # HAProxy
+{% for i in range(groups['haproxy_servers']|length) %}
+{{'    - host    all             all           '~groups['haproxy_servers'][i]~'/24          trust'}}
+{% endfor %}
+
+    # CITUS
+
+    # Coordinators Primary Site
+{% for i in range(groups['coordinators_primary']|length) %}
+{{'    - host    all             all           '~groups['coordinators_primary'][i]~'/24          trust'}}
+{{'    - host    replication     all           '~groups['coordinators_primary'][i]~'/24          trust'}}
+{% endfor %}
+
+    # Coordinators Disaster Recovery Site
+{% for i in range(groups['coordinators_dr']|length) %}
+{{'    - host    all             all           '~groups['coordinators_dr'][i]~'/24          trust'}}
+{{'    - host    replication     all           '~groups['coordinators_dr'][i]~'/24          trust'}}
+{% endfor %}
+
+    # Workers Primary Site
+{% for i in range(groups['workers_primary']|length) %}
+{{'    - host    all             all           '~groups['workers_primary'][i]~'/24          trust'}}
+{{'    - host    replication     all           '~groups['workers_primary'][i]~'/24          trust'}}
+{% endfor %}
+
+    # Workers Disaster Recovery Site
+{% for i in range(groups['workers_dr']|length) %}
+{{'    - host    all             all           '~groups['workers_dr'][i]~'/24          trust'}}
+{{'    - host    replication     all           '~groups['workers_dr'][i]~'/24          trust'}}
+{% endfor %}
+
+    # END ANSIBLE MANAGED BLOCK
+
+  users:
+    {{ POSTGRES_SUPERUSER_USERNAME }}:
+      password: {{ POSTGRES_SUPERUSER_PASSWORD }}
+      options:
+        - createrole
+        - createdb
+
+postgresql:
+  listen: {{ outer_ns.patroni_ip }}:5432
+  connect_address: {{ outer_ns.patroni_ip }}:5432
+  data_dir: {{ POSTGRES_DATA_DIRECTORY }}
+  bin_dir: {{ POSTGRES_BIN_DIRECTORY }}
+  pgpass: /tmp/pgpass0
+  authentication:
+    replication:
+      username: {{ POSTGRES_REPLICATION_USERNAME }}
+      password: {{ POSTGRES_REPLICATION_PASSWORD }}
+    superuser:
+      username: {{ POSTGRES_SUPERUSER_USERNAME }}
+      password: {{ POSTGRES_SUPERUSER_PASSWORD }}
+    rewind:
+      username: {{ POSTGRES_REWIND_USERNAME }}
+      password: {{ POSTGRES_REWIND_PASSWORD }}
+  parameters:
+    external_pid_file: '/var/run/postgresql/{{ PATRONI_CLUSTER_NAME }}.pid'
+    shared_preload_libraries: 'citus,pg_cron,pg_partman_bgw'
+
+# END ANSIBLE MANAGED BLOCK
