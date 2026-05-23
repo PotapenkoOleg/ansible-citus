@@ -6,3 +6,5 @@ Steps:
 3. Enable logical replication
 4. When data is fully copied, stop replication and switch HAProxy to a new cluster
 5. Remove the old cluster. Optionally, leave it to switch back in case of any issues
+
+NOTE: You can use install scripts to spin a new cluster, just update config eg ports to avoid conflicts 
