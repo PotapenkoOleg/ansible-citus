@@ -1,0 +1,1 @@
+[MICROSOFT AZURE List of Postgres extensions and modules by name](https://learn.microsoft.com/en-us/azure/postgresql/extensions/concepts-extensions-versions)
