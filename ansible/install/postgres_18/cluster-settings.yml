@@ -1,4 +1,4 @@
-CLUSTER_NAME: "constellation" # TODO: Change this to the actual cluster name
+CLUSTER_NAME: "constellation_v18" # TODO: Change this to the actual cluster name
 # ETCD SETTINGS
 ETCD_MAJOR_VERSION: "3"
 ETCD_MINOR_VERSION: "6"
