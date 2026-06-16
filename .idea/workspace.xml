@@ -4,16 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="More TODOs and PORT settings in config">
-      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Postgres update">
+      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/haproxy.cfg.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/haproxy.cfg.j2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/patroni.config.yml.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/patroni.config.yml.j2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/install-postgres.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/install-postgres.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/postgresql.conf.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/postgresql.conf.j2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,22 +44,22 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000188669967287" />
-      <entry key="S5" value="1.0245679625124655" />
-      <entry key="S10" value="1.3321486565795944" />
-      <entry key="S30" value="3.7302833310822714" />
-      <entry key="S60" value="7.12167392691122" />
-      <entry key="M2" value="11.975639441318101" />
-      <entry key="M5" value="24.63350530697646" />
-      <entry key="M10" value="47.561682511422624" />
-      <entry key="M15" value="67.44806242655835" />
-      <entry key="M30" value="116.59775157179797" />
-      <entry key="H1" value="195.1526303124089" />
-      <entry key="H2" value="297.1213004000954" />
-      <entry key="H4" value="393.5522863047495" />
-      <entry key="D1" value="521.5778436592418" />
-      <entry key="W1" value="550.0296236061758" />
+      <entry key="MS500" value="1.0000000000013645" />
+      <entry key="S2" value="1.0024902185768105" />
+      <entry key="S5" value="1.2036334099947794" />
+      <entry key="S10" value="1.9133782641379113" />
+      <entry key="S30" value="4.436530926249148" />
+      <entry key="S60" value="7.983859318282231" />
+      <entry key="M2" value="14.036143680724862" />
+      <entry key="M5" value="27.24707611651936" />
+      <entry key="M10" value="47.59432365679409" />
+      <entry key="M15" value="67.33101793033589" />
+      <entry key="M30" value="119.19425375444312" />
+      <entry key="H1" value="202.45945236413854" />
+      <entry key="H2" value="311.4808862460028" />
+      <entry key="H4" value="416.04413077695256" />
+      <entry key="D1" value="556.8929525978765" />
+      <entry key="W1" value="588.4734388066528" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -86,23 +81,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9726549474122855" />
-      <entry key="MS500" value="0.9944701686732144" />
-      <entry key="S2" value="0.9986335106230598" />
-      <entry key="S5" value="1.0240020322627204" />
-      <entry key="S10" value="1.3317930827580593" />
-      <entry key="S30" value="3.7299655618939047" />
-      <entry key="S60" value="7.12136370384061" />
-      <entry key="M2" value="11.97536404124851" />
-      <entry key="M5" value="24.63323663361589" />
-      <entry key="M10" value="47.56137758518576" />
-      <entry key="M15" value="67.44772403799335" />
-      <entry key="M30" value="116.59728389162655" />
-      <entry key="H1" value="195.15207216082922" />
-      <entry key="H2" value="297.12081572298786" />
-      <entry key="H4" value="393.55195570899633" />
-      <entry key="D1" value="521.5777708141047" />
-      <entry key="W1" value="550.0296126672245" />
+      <entry key="MS100" value="0.9460576467255959" />
+      <entry key="MS500" value="0.9889709163822458" />
+      <entry key="S2" value="0.9995868939353755" />
+      <entry key="S5" value="1.196930578844015" />
+      <entry key="S10" value="1.8994184269318195" />
+      <entry key="S30" value="4.419826511238748" />
+      <entry key="S60" value="7.970127037923394" />
+      <entry key="M2" value="14.026861117524566" />
+      <entry key="M5" value="27.242482186745185" />
+      <entry key="M10" value="47.59175660537725" />
+      <entry key="M15" value="67.32916500821688" />
+      <entry key="M30" value="119.19305677070273" />
+      <entry key="H1" value="202.45854319410543" />
+      <entry key="H2" value="311.4802204980943" />
+      <entry key="H4" value="416.0437033883252" />
+      <entry key="D1" value="556.8928618236275" />
+      <entry key="W1" value="588.4734252439348" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -167,7 +162,7 @@
       <option name="presentableId" value="Default" />
       <updated>1779491619655</updated>
       <workItem from="1779491620658" duration="11697000" />
-      <workItem from="1781588933031" duration="6105000" />
+      <workItem from="1781588933031" duration="6572000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -233,7 +228,31 @@
       <option name="project" value="LOCAL" />
       <updated>1781593000575</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="ETCD Fixes">
+      <option name="closed" value="true" />
+      <created>1781595725018</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1781595725018</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Cluster name update">
+      <option name="closed" value="true" />
+      <created>1781595777884</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1781595777884</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Postgres update">
+      <option name="closed" value="true" />
+      <created>1781595833757</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1781595833757</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,9 +267,11 @@
     <MESSAGE value="Install Postgres 18 with Citus 14.0" />
     <MESSAGE value="Bonus" />
     <MESSAGE value="Citus Upgrade Playbooks" />
-    <MESSAGE value="ETCD Fixes" />
     <MESSAGE value="ETCD Fixes: settings fix" />
     <MESSAGE value="More TODOs and PORT settings in config" />
-    <option name="LAST_COMMIT_MESSAGE" value="More TODOs and PORT settings in config" />
+    <MESSAGE value="ETCD Fixes" />
+    <MESSAGE value="Cluster name update" />
+    <MESSAGE value="Postgres update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Postgres update" />
   </component>
 </project>

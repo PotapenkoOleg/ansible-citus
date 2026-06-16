@@ -29,8 +29,8 @@ citus:
   database: {{ PATRONI_CITUS_DB_NAME }}
 
 restapi:
-  listen: {{ outer_ns.patroni_ip }}:8008
-  connect_address: {{ outer_ns.patroni_ip }}:8008
+  listen: {{ outer_ns.patroni_ip }}:{{ PATRONI_API_PORT }}
+  connect_address: {{ outer_ns.patroni_ip }}:{{ PATRONI_API_PORT }}
 
 {% set etcd_server_list = [] %}
 {% for i in range(groups['etcd_servers']|length) %}
@@ -117,8 +117,8 @@ bootstrap:
         - createdb
 
 postgresql:
-  listen: {{ outer_ns.patroni_ip }}:5432
-  connect_address: {{ outer_ns.patroni_ip }}:5432
+  listen: {{ outer_ns.patroni_ip }}:{{ POSTGRES_DEFAULT_PORT }}
+  connect_address: {{ outer_ns.patroni_ip }}:{{ POSTGRES_DEFAULT_PORT }}
   data_dir: {{ POSTGRES_DATA_DIRECTORY }}
   bin_dir: {{ POSTGRES_BIN_DIRECTORY }}
   pgpass: /tmp/pgpass0
