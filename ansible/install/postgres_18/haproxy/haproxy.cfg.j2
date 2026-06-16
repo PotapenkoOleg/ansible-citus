@@ -27,13 +27,13 @@ frontend ft_postgresql_readonly
 backend bk_postgres
     option  httpchk OPTIONS /leader
 {% for i in range(groups['coordinators']|length) %}
-{{'    server coordinator-0'~(i+1)~'    '~groups['coordinators'][i]~':5432  check port 8008'}}
+{{'    server coordinator-0'~(i+1)~'    '~groups['coordinators'][i]~':'~POSTGRES_DEFAULT_PORT~'  check port '~PATRONI_API_PORT}}
 {% endfor %}
 
 backend bk_postgres_readonly
     option  httpchk OPTIONS /leader
 {% for i in range(groups['workers']|length) %}
-{{'    server worker-0'~(i+1)~'    '~groups['workers'][i]~':5432  check port 8008'}}
+{{'    server worker-0'~(i+1)~'    '~groups['workers'][i]~':'~POSTGRES_DEFAULT_PORT~'  check port '~PATRONI_API_PORT}}
 {% endfor %}
 
 # END ANSIBLE MANAGED BLOCK
