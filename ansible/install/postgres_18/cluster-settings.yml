@@ -8,17 +8,17 @@ ETCD_DOWNLOAD_URL: "https://github.com/etcd-io/etcd/releases/download"
 ETCD_TAR_FILE: "{{ ETCD_DIRECTORY }}/etcd-{{ ETCD_VERSION }}-linux-amd64.tar.gz"
 ETCD_CLUSTER_NAME: "{{ CLUSTER_NAME }}"
 ETCD_DIRECTORY: "/opt/etcd/{{ ETCD_VERSION }}" # TODO: Change this to the actual etcd directory
-ETCD_PEER_URLS_PORT: "2380" # TODO: Change this to the actual peer URLs port
-ETCD_CLIENT_URLS_PORT: "2379" # TODO: Change this to the actual client URLs port
+ETCD_PEER_URLS_PORT: "2480" # TODO: Change this to the actual peer URLs port
+ETCD_CLIENT_URLS_PORT: "2479" # TODO: Change this to the actual client URLs port
 # HAPROXY SETTINGS
 HAPROXY_MAX_CONNECTIONS: "1000"
-HAPROXY_POSTGRES_PORT: "5000" # TODO: Change this to the actual postgres port
-HAPROXY_POSTGRES_READONLY_PORT: "5001" # TODO: Change this to the actual postgres readonly port
-HAPROXY_STATISTICS_PORT: "9000"
-HAPROXY_DMA_PORT: "9300"
+HAPROXY_POSTGRES_PORT: "5100" # TODO: Change this to the actual postgres port
+HAPROXY_POSTGRES_READONLY_PORT: "5101" # TODO: Change this to the actual postgres readonly port
+HAPROXY_STATISTICS_PORT: "9001"
+HAPROXY_DMA_PORT: "9301"
 # POSTGRES SETTINGS
 POSTGRES_VERSION: "18"
-POSTGRES_DEFAULT_PORT: "5432" # TODO: Change this to the actual default port
+POSTGRES_DEFAULT_PORT: "5433" # TODO: Change this to the actual default port
 # POSTGRES DIRECTORIES
 POSTGRES_ROOT_DIRECTORY: "/opt/postgres" # TODO: Change this to the actual postgres directory
 POSTGRES_DEFAULT_DIRECTORY: "/var/lib/pgsql/"
@@ -45,7 +45,7 @@ PYTHON_VERSION: "{{ PYTHON_MAJOR_VERSION }}{{ PYTHON_MINOR_VERSION }}"
 # PATRONI SETTINGS
 PATRONI_CLUSTER_NAME: "{{ CLUSTER_NAME }}"
 PATRONI_CITUS_DB_NAME: "{{ CLUSTER_NAME }}" # TODO: Change this to the actual distributed database name
-PATRONI_API_PORT: "8008" # TODO: Change this to the actual API port
+PATRONI_API_PORT: "8009" # TODO: Change this to the actual API port
 # PATRONI VERSION
 PATRONI_MAJOR_VERSION: "4"
 PATRONI_MINOR_VERSION: "1"
