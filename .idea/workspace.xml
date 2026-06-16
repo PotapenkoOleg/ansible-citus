@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Citus Upgrade Playbooks">
-      <change beforePath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/etcd.service.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/etcd.service.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,46 +16,50 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="7" />
+    <option name="cachedIndexableFilesCount" value="95" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "PotapenkoOleg"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PotapenkoOleg&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/PotapenkoOleg/ansible-citus.git",
-    "accountId": "745b25e2-2c12-4f3b-b8fe-d9a4e22adb71"
+    "accountId": "0568a2ae-4e84-4750-9039-5f4c7496cc65"
   }
 }]]></component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="nII0xhsr" />
+  </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.000527424036989" />
-      <entry key="S2" value="1.3415756896425912" />
-      <entry key="S5" value="2.941793586957074" />
-      <entry key="S10" value="5.497669194442154" />
-      <entry key="S30" value="12.155771887186882" />
-      <entry key="S60" value="17.381179516384833" />
-      <entry key="M2" value="22.96274904376224" />
-      <entry key="M5" value="34.0965195568281" />
-      <entry key="M10" value="55.719482134388045" />
-      <entry key="M15" value="75.4121478627325" />
-      <entry key="M30" value="119.67160001165176" />
-      <entry key="H1" value="177.66195969205918" />
-      <entry key="H2" value="241.79332832451365" />
-      <entry key="H4" value="295.5912223536422" />
-      <entry key="D1" value="360.1399765497628" />
-      <entry key="W1" value="373.66386601873876" />
+      <entry key="MS100" value="1.0000006500556649" />
+      <entry key="MS500" value="1.0778539116661006" />
+      <entry key="S2" value="2.0029252096516794" />
+      <entry key="S5" value="3.2388050756873996" />
+      <entry key="S10" value="4.225549119399927" />
+      <entry key="S30" value="5.2818895954340075" />
+      <entry key="S60" value="5.630644641560048" />
+      <entry key="M2" value="6.068787298523352" />
+      <entry key="M5" value="8.599433157478249" />
+      <entry key="M10" value="17.505989404906725" />
+      <entry key="M15" value="30.939578155212384" />
+      <entry key="M30" value="74.69546200052669" />
+      <entry key="H1" value="143.25050057575314" />
+      <entry key="H2" value="223.4123321315048" />
+      <entry key="H4" value="293.09179597165837" />
+      <entry key="D1" value="379.37887951541677" />
+      <entry key="W1" value="397.80528173049885" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -74,29 +81,29 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9862327044933592" />
-      <entry key="MS500" value="0.9977572136857966" />
-      <entry key="S2" value="1.3406304637823336" />
-      <entry key="S5" value="2.9408830548543086" />
-      <entry key="S10" value="5.496745788010383" />
-      <entry key="S30" value="12.154024345351807" />
-      <entry key="S60" value="17.376506747921137" />
-      <entry key="M2" value="22.956462508660085" />
-      <entry key="M5" value="34.091556297448435" />
-      <entry key="M10" value="55.715972612048944" />
-      <entry key="M15" value="75.40937945695275" />
-      <entry key="M30" value="119.66981532466555" />
-      <entry key="H1" value="177.66085186167362" />
-      <entry key="H2" value="241.7926784389891" />
-      <entry key="H4" value="295.5908628314169" />
-      <entry key="D1" value="360.1399104054611" />
-      <entry key="W1" value="373.66385639321123" />
+      <entry key="MS100" value="0.9395233556166683" />
+      <entry key="MS500" value="1.0642198595055299" />
+      <entry key="S2" value="1.9956109695969935" />
+      <entry key="S5" value="3.234074532066112" />
+      <entry key="S10" value="4.222554081177791" />
+      <entry key="S30" value="5.280683677178635" />
+      <entry key="S60" value="5.63000909270315" />
+      <entry key="M2" value="6.0684532131284" />
+      <entry key="M5" value="8.59921544150432" />
+      <entry key="M10" value="17.50550707951439" />
+      <entry key="M15" value="30.938867047317316" />
+      <entry key="M30" value="74.69455551047642" />
+      <entry key="H1" value="143.24970089697183" />
+      <entry key="H2" value="223.41177218272577" />
+      <entry key="H4" value="293.0914574733157" />
+      <entry key="D1" value="379.37881245597225" />
+      <entry key="W1" value="397.8052718471359" />
     </decayedShown>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3E6GUJvtGEkNGkmLiGWe0qxu0EF" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -108,6 +115,7 @@
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
@@ -120,6 +128,8 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
@@ -152,6 +162,7 @@
       <option name="presentableId" value="Default" />
       <updated>1779491619655</updated>
       <workItem from="1779491620658" duration="11697000" />
+      <workItem from="1781588933031" duration="2562000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -199,6 +210,9 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.j2" />
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Dir structure changes and docs" />
@@ -206,16 +220,5 @@
     <MESSAGE value="Bonus" />
     <MESSAGE value="Citus Upgrade Playbooks" />
     <option name="LAST_COMMIT_MESSAGE" value="Citus Upgrade Playbooks" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -7,7 +7,7 @@ After=syslog.target network.target
 {% set etcd_server_list = [] %}
 {% set outer_ns = {'etcd_name': '', 'etcd_ip': ''} %}
 {% for i in range(groups['etcd_servers']|length) %}
-{% set _ = etcd_server_list.append('etcd'~ (i+1) ~'=http://'~ groups['etcd_servers'][i] ~':2380' ) %}
+{% set _ = etcd_server_list.append('etcd'~ (i+1) ~'=http://'~ groups['etcd_servers'][i] ~':'~ ETCD_PEER_URLS_PORT ) %}
 {% if groups['etcd_servers'][i] in ansible_all_ipv4_addresses %}
 {% set _ = outer_ns.update({'etcd_name': 'etcd' ~ (i+1), 'etcd_ip': groups['etcd_servers'][i]}) %}
 {% endif %}
@@ -19,10 +19,10 @@ Type=notify
 ExecStart={{ ETCD_DIRECTORY }}/etcd \
  --name {{ outer_ns.etcd_name }} \
  --data-dir {{ ETCD_DIRECTORY }}/data \
- --initial-advertise-peer-urls http://{{ outer_ns.etcd_ip }}:2380 \
- --listen-peer-urls http://{{ outer_ns.etcd_ip }}:2380 \
- --listen-client-urls http://{{ outer_ns.etcd_ip }}:2379,http://127.0.0.1:2379 \
- --advertise-client-urls http://{{ outer_ns.etcd_ip }}:2379 \
+ --initial-advertise-peer-urls http://{{ outer_ns.etcd_ip }}:{{ ETCD_PEER_URLS_PORT }} \
+ --listen-peer-urls http://{{ outer_ns.etcd_ip }}:{{ ETCD_PEER_URLS_PORT }} \
+ --listen-client-urls http://{{ outer_ns.etcd_ip }}:{{ ETCD_CLIENT_URLS_PORT }},http://127.0.0.1:{{ ETCD_CLIENT_URLS_PORT }} \
+ --advertise-client-urls http://{{ outer_ns.etcd_ip }}:{{ ETCD_CLIENT_URLS_PORT }} \
  --initial-cluster-token {{ ETCD_CLUSTER_NAME }} \
  --initial-cluster {{ etcd_server_list|join(',') }} \
  --initial-cluster-state new \
