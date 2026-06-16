@@ -1,8 +1,9 @@
 # BEGIN ANSIBLE MANAGED BLOCK
 # TODO: RUN optimize.py to get settings for your environment
 listen_addresses = '*' # MODIFIED
-max_connections = 1000 # MODIFIED
-shared_buffers = 10GB # MODIFIED
+port = {{ POSTGRES_DEFAULT_PORT }} # MODIFIED
+max_connections = 10 # MODIFIED # TODO: adjust for your environment
+shared_buffers = 1GB # MODIFIED # TODO: adjust for your environment
 dynamic_shared_memory_type = posix
 max_wal_size = 256GB # MODIFIED
 min_wal_size = 80MB
@@ -16,8 +17,7 @@ log_truncate_on_rotation = on
 log_line_prefix = '%m [%p-%l] %u@%d app=%a ' # MODIFIED
 log_timezone = 'America/Toronto'
 datestyle = 'iso, mdy'
-timezone = 'America/Toronto' # TODO set to your timezone
-lc_collate = 'en_US.UTF-8'
+timezone = 'America/Toronto'
 lc_messages = 'C' # MODIFIED
 lc_monetary = 'en_US.UTF-8'
 lc_numeric = 'en_US.UTF-8'
@@ -27,7 +27,7 @@ shared_preload_libraries = 'citus,pg_cron,pg_partman_bgw'
 ########################################################################
 # Values not in original config
 ########################################################################
-huge_pages = on
+huge_pages = off # TODO: adjust for your environment
 wal_recycle = off
 wal_init_zero = off
 work_mem = 64MB

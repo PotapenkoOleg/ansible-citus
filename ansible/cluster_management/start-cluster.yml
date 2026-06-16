@@ -1,4 +1,5 @@
 ---
+# TODO: add cluster settings
 - name: Start Patroni Service on COORDINATORS PRIMARY
   hosts: coordinators_primary
   become: yes

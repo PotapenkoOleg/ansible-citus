@@ -2,8 +2,68 @@
 - name: Install Postgres
   hosts: postgres_servers
   become: yes
-  var_files:
-    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+#  var_files:
+#    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
+  vars:
+    CLUSTER_NAME: "constellation_v18" # TODO: Change this to the actual cluster name
+    # ETCD SETTINGS
+    ETCD_MAJOR_VERSION: "3"
+    ETCD_MINOR_VERSION: "6"
+    ETCD_PATCH_VERSION: "11"
+    ETCD_VERSION: "v{{ ETCD_MAJOR_VERSION }}.{{ ETCD_MINOR_VERSION }}.{{ ETCD_PATCH_VERSION }}"
+    ETCD_DOWNLOAD_URL: "https://github.com/etcd-io/etcd/releases/download"
+    ETCD_TAR_FILE: "{{ ETCD_DIRECTORY }}/etcd-{{ ETCD_VERSION }}-linux-amd64.tar.gz"
+    ETCD_CLUSTER_NAME: "{{ CLUSTER_NAME }}"
+    ETCD_DIRECTORY: "/opt/etcd/{{ ETCD_VERSION }}" # TODO: Change this to the actual etcd directory
+    ETCD_PEER_URLS_PORT: "2480" # TODO: Change this to the actual peer URLs port
+    ETCD_CLIENT_URLS_PORT: "2479" # TODO: Change this to the actual client URLs port
+    # HAPROXY SETTINGS
+    HAPROXY_MAX_CONNECTIONS: "1000"
+    HAPROXY_POSTGRES_PORT: "5100" # TODO: Change this to the actual postgres port
+    HAPROXY_POSTGRES_READONLY_PORT: "5101" # TODO: Change this to the actual postgres readonly port
+    HAPROXY_STATISTICS_PORT: "9001"
+    HAPROXY_DMA_PORT: "9301"
+    # POSTGRES SETTINGS
+    POSTGRES_VERSION: "18"
+    POSTGRES_DEFAULT_PORT: "5433" # TODO: Change this to the actual default port
+    # POSTGRES DIRECTORIES
+    POSTGRES_ROOT_DIRECTORY: "/opt/postgres" # TODO: Change this to the actual postgres directory
+    POSTGRES_DEFAULT_DIRECTORY: "/var/lib/pgsql/"
+    POSTGRES_BIN_DIRECTORY: "/usr/pgsql-{{ POSTGRES_VERSION }}/bin"
+    POSTGRES_DATA_DIRECTORY: "{{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data"
+    POSTGRES_LOG_DIRECTORY: "{{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}/log"
+    # POSTGRES ADMIN USERS AND PASSWORDS
+    POSTGRES_SUPERUSER_USERNAME: "postgres"
+    POSTGRES_SUPERUSER_PASSWORD: "postgres" # TODO: Change this to a secure password
+    POSTGRES_REPLICATION_USERNAME: "rep_user"
+    POSTGRES_REPLICATION_PASSWORD: "postgres" # TODO: Change this to a secure password
+    POSTGRES_REWIND_USERNAME: "rep_user"
+    POSTGRES_REWIND_PASSWORD: "postgres" # TODO: Change this to a secure password
+    # CITUS VERSION
+    CITUS_MAJOR_VERSION: "14"
+    CITUS_MINOR_VERSION: "" # Ignore "0" version
+    CITUS_PATCH_VERSION: "1"
+    CITUS_VERSION: "{{ CITUS_MAJOR_VERSION }}{{ CITUS_MINOR_VERSION }}{{ CITUS_PATCH_VERSION }}"
+    # PYTHON
+    # PYTHON 3.9 IS DEFAULT for ALMA LINUX 9
+    PYTHON_MAJOR_VERSION: "3"
+    PYTHON_MINOR_VERSION: "9"
+    PYTHON_VERSION: "{{ PYTHON_MAJOR_VERSION }}{{ PYTHON_MINOR_VERSION }}"
+    # PATRONI SETTINGS
+    PATRONI_CLUSTER_NAME: "{{ CLUSTER_NAME }}"
+    PATRONI_CITUS_DB_NAME: "{{ CLUSTER_NAME }}" # TODO: Change this to the actual distributed database name
+    PATRONI_API_PORT: "8009" # TODO: Change this to the actual API port
+    # PATRONI VERSION
+    PATRONI_MAJOR_VERSION: "4"
+    PATRONI_MINOR_VERSION: "1"
+    PATRONI_PATCH_VERSION: "3"
+    PATRONI_VERSION: "v{{PATRONI_MAJOR_VERSION}}.{{PATRONI_MINOR_VERSION}}.{{PATRONI_PATCH_VERSION}}"
+    # PATRONI DIRECTORIES
+    PATRONI_DOWNLOAD_URL: "https://github.com/patroni/patroni/archive/refs/tags/{{ PATRONI_VERSION }}.tar.gz"
+    PATRONI_DIRECTORY: "/opt/patroni/{{ PATRONI_VERSION }}"
+    PATRONI_TAR_FILE: "{{ PATRONI_DIRECTORY }}/patroni-{{ PATRONI_VERSION }}.tar.gz"
+    # PATRONI JUMP SERVER
+    JUMP_SERVER_IP: "127.0.0.1" # TODO: Change this to the actual jump server IP
   tasks:
     - name: Create postgres group
       group:
@@ -33,6 +93,7 @@
       ansible.builtin.dnf:
         name: citus{{ CITUS_VERSION }}_{{ POSTGRES_VERSION }}
         state: latest
+        disable_gpg_check: yes # TODO: permanently disable GPG checks -> sudo nano /etc/yum.repos.d/citusdata_community.repo -> set gpgcheck=0
     - name: Initialize system database
       ansible.builtin.shell: sudo runuser -u postgres -- /usr/pgsql-{{POSTGRES_VERSION}}/bin/initdb --pgdata=/var/lib/pgsql/{{POSTGRES_VERSION}}/data -A scram-sha-256 --auth-local=peer
     - name: Create Unix Socket Directory
@@ -63,6 +124,8 @@
         owner: postgres
         group: postgres
         mode: '0750'
+    - name: Remove New Data Directory if exists
+      ansible.builtin.shell: "rm -rf {{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data"
     - name: Copy Postgres Data Directory to New Location
       ansible.builtin.shell: "cp -R {{ POSTGRES_DEFAULT_DIRECTORY }}/{{ POSTGRES_VERSION }}/data {{ POSTGRES_ROOT_DIRECTORY }}/{{ POSTGRES_VERSION }}"
     - name: Remove Old Data Directory
@@ -133,21 +196,25 @@
         enabled: yes
         state: started
     - name: Set Postgres Password
-      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "ALTER USER postgres WITH PASSWORD '{{POSTGRES_SUPERUSER_PASSWORD}}';"
+      ansible.builtin.shell: runuser -u postgres -- psql -h localhost -p {{ POSTGRES_DEFAULT_PORT }} -U postgres -c "ALTER USER postgres WITH PASSWORD '{{ POSTGRES_SUPERUSER_PASSWORD }}';"
     - name: Set Postgres Replication User Password
-      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REPLICATION_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REPLICATION_PASSWORD }}';"
+      ansible.builtin.shell: runuser -u postgres -- psql -h localhost -p {{ POSTGRES_DEFAULT_PORT }} -U postgres -c "CREATE USER {{ POSTGRES_REPLICATION_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REPLICATION_PASSWORD }}';"
     # TODO: Uncomment the following task if Rewind user is different from Replication user
     #    - name: Set Postgres Rewind User Password
     #      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REWIND_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REWIND_PASSWORD }}';"
     - name: Create Distributed DB managed by Patroni
-      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE DATABASE {{PATRONI_CITUS_DB_NAME}};"
+      ansible.builtin.shell: runuser -u postgres -- psql -h localhost -p {{ POSTGRES_DEFAULT_PORT }} -U postgres -c "CREATE DATABASE {{ PATRONI_CITUS_DB_NAME }};"
     - name: Create Citus Extension
-      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -d {{PATRONI_CITUS_DB_NAME}} -c "CREATE EXTENSION citus;"
+      ansible.builtin.shell: runuser -u postgres -- psql -h localhost -p {{ POSTGRES_DEFAULT_PORT }} -U postgres -d {{ PATRONI_CITUS_DB_NAME }} -c "CREATE EXTENSION citus;"
     - name: Disable And Stop Postgres Service
       ansible.builtin.service: # STOP SERVICE - Patroni will manage it
         name: postgresql-{{ POSTGRES_VERSION }}
         enabled: no
         state: stopped
+
+######################################################################################
+# IMPORTANT!!! STARTING FROM VERSION 3 PATRONI SET ALL THIS FOR YOU. DON'T RUN IT !!!
+######################################################################################
 # TODO:
 # Register the hostname that future workers will use to connect
 # to the coordinator node.
