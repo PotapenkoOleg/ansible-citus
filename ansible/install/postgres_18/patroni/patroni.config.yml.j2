@@ -34,7 +34,7 @@ restapi:
 
 {% set etcd_server_list = [] %}
 {% for i in range(groups['etcd_servers']|length) %}
-{% set _ = etcd_server_list.append(groups['etcd_servers'][i] ~ ':2379') %}
+{% set _ = etcd_server_list.append(groups['etcd_servers'][i] ~ ':' ~ ETCD_CLIENT_URLS_PORT) %}
 {% endfor %}
 etcd3:
   hosts: {{ etcd_server_list|join(',') }}
@@ -106,8 +106,6 @@ bootstrap:
 {{'    - host    all             all           '~groups['workers_dr'][i]~'/24          trust'}}
 {{'    - host    replication     all           '~groups['workers_dr'][i]~'/24          trust'}}
 {% endfor %}
-
-    # END ANSIBLE MANAGED BLOCK
 
   users:
     {{ POSTGRES_SUPERUSER_USERNAME }}:

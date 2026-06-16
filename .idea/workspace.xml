@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Port number update for blue green deployment">
-      <change afterPath="$PROJECT_DIR$/ansible/remove/postgres_17/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ansible/remove/postgres_18/README.md" afterDir="false" />
+    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Install script fixes">
+      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/sample-blue-green.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/blue_green_deployment/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_17/cluster_management/start-cluster.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/cluster_management/start-cluster.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_17/cluster_management/stop-cluster.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/cluster_management/stop-cluster.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/install-postgres.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/install-postgres.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/postgresql.conf.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/postgresql.conf.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/install-patroni.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/install-patroni.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/patroni.config.yml.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/patroni.config.yml.j2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,61 +45,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000000000001388" />
-      <entry key="S2" value="1.0009587455963829" />
-      <entry key="S5" value="1.0934407483513642" />
-      <entry key="S10" value="1.431834547945475" />
-      <entry key="S30" value="2.1995602938763055" />
-      <entry key="S60" value="2.548888986294507" />
-      <entry key="M2" value="2.7870367606399675" />
-      <entry key="M5" value="5.025288167119872" />
-      <entry key="M10" value="13.436776169648732" />
-      <entry key="M15" value="21.89162004361669" />
-      <entry key="M30" value="44.7013147017202" />
-      <entry key="H1" value="101.58850664318467" />
-      <entry key="H2" value="222.50951557865227" />
-      <entry key="H4" value="381.6337524094379" />
-      <entry key="D1" value="653.4182493594503" />
-      <entry key="W1" value="722.5986981844529" />
+      <entry key="MS100" value="1.0006858892355246" />
+      <entry key="MS500" value="1.277010157205119" />
+      <entry key="S2" value="2.567346267370352" />
+      <entry key="S5" value="4.449055047354162" />
+      <entry key="S10" value="6.27981198108336" />
+      <entry key="S30" value="9.9146736559862" />
+      <entry key="S60" value="13.858018474553452" />
+      <entry key="M2" value="20.972750066286892" />
+      <entry key="M5" value="40.49860551999597" />
+      <entry key="M10" value="63.197973501022055" />
+      <entry key="M15" value="77.92942131565694" />
+      <entry key="M30" value="106.01994543174527" />
+      <entry key="H1" value="154.54484426554725" />
+      <entry key="H2" value="263.553221196462" />
+      <entry key="H4" value="431.7484141129138" />
+      <entry key="D1" value="763.9723972214368" />
+      <entry key="W1" value="855.3673513318515" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
       <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="0.0" />
-      <entry key="M10" value="0.0" />
-      <entry key="M15" value="0.0" />
-      <entry key="M30" value="0.0" />
-      <entry key="H1" value="0.0" />
-      <entry key="H2" value="0.0" />
-      <entry key="H4" value="0.0" />
-      <entry key="D1" value="0.0" />
-      <entry key="W1" value="0.0" />
+      <entry key="S5" value="1.3843145843172055E-209" />
+      <entry key="S10" value="3.7206378274661476E-105" />
+      <entry key="S30" value="1.5495507303483726E-35" />
+      <entry key="S60" value="3.936433322626416E-18" />
+      <entry key="M2" value="1.9840446876586244E-9" />
+      <entry key="M5" value="3.3038519662453506E-4" />
+      <entry key="M10" value="0.018176501220656654" />
+      <entry key="M15" value="0.06913110943821715" />
+      <entry key="M30" value="0.2629279548435597" />
+      <entry key="H1" value="0.5127650093791112" />
+      <entry key="H2" value="0.7160761198218446" />
+      <entry key="H4" value="0.8462128100081241" />
+      <entry key="D1" value="0.9725529732585751" />
+      <entry key="W1" value="0.9960320739968097" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9330329915368074" />
-      <entry key="MS500" value="0.9862327044934961" />
-      <entry key="S2" value="0.997495435806161" />
-      <entry key="S5" value="1.0919142300186366" />
-      <entry key="S10" value="1.4308138960390748" />
-      <entry key="S30" value="2.199024865822752" />
-      <entry key="S60" value="2.548576792837331" />
-      <entry key="M2" value="2.786866381936917" />
-      <entry key="M5" value="5.025189038303382" />
-      <entry key="M10" value="13.436658076722562" />
-      <entry key="M15" value="21.891441903225143" />
-      <entry key="M30" value="44.70081961544933" />
-      <entry key="H1" value="101.58764310461221" />
-      <entry key="H2" value="222.50858797512137" />
-      <entry key="H4" value="381.6330307637311" />
-      <entry key="D1" value="653.4180678840725" />
-      <entry key="W1" value="722.5986702360831" />
+      <entry key="MS100" value="0.9800920697387656" />
+      <entry key="MS500" value="1.2715881396802473" />
+      <entry key="S2" value="2.5640050551959095" />
+      <entry key="S5" value="4.446484223587965" />
+      <entry key="S10" value="6.277946326258453" />
+      <entry key="S30" value="9.913630782232289" />
+      <entry key="S60" value="13.857265608894199" />
+      <entry key="M2" value="20.97218247856551" />
+      <entry key="M5" value="40.498494525662316" />
+      <entry key="M10" value="63.21570220455089" />
+      <entry key="M15" value="77.99804700441295" />
+      <entry key="M30" value="106.28224982073071" />
+      <entry key="H1" value="155.05682480365368" />
+      <entry key="H2" value="264.2684254879233" />
+      <entry key="H4" value="432.59388817733173" />
+      <entry key="D1" value="764.9447438937727" />
+      <entry key="W1" value="856.3633509667249" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -168,7 +165,7 @@
       <option name="presentableId" value="Default" />
       <updated>1779491619655</updated>
       <workItem from="1779491620658" duration="11697000" />
-      <workItem from="1781588933031" duration="15331000" />
+      <workItem from="1781588933031" duration="20964000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -290,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781596109217</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Install script fixes">
+      <option name="closed" value="true" />
+      <created>1781605668671</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1781605668671</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -314,6 +319,7 @@
     <MESSAGE value="Patroni ports moved in config" />
     <MESSAGE value="HAProxy ports moved into config" />
     <MESSAGE value="Port number update for blue green deployment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Port number update for blue green deployment" />
+    <MESSAGE value="Install script fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Install script fixes" />
   </component>
 </project>
