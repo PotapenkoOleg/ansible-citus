@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="ETCD Fixes: settings fix">
+    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="More TODOs and PORT settings in config">
+      <change afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_17/haproxy/haproxy.cfg.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_17/haproxy/haproxy.cfg.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/haproxy.cfg.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/haproxy/haproxy.cfg.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/patroni.config.yml.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/patroni/patroni.config.yml.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/install-postgres.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/install-postgres.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/postgresql.conf.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/postgres/postgresql.conf.j2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,22 +49,22 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.000000009000722" />
-      <entry key="S2" value="1.0111801245639007" />
-      <entry key="S5" value="1.2365420217288812" />
-      <entry key="S10" value="1.7881054580851274" />
-      <entry key="S30" value="3.5319465650377047" />
-      <entry key="S60" value="5.22368227387732" />
-      <entry key="M2" value="7.368174692655475" />
-      <entry key="M5" value="11.633874225753948" />
-      <entry key="M10" value="19.073466216066155" />
-      <entry key="M15" value="29.206244163547915" />
-      <entry key="M30" value="67.28270420863383" />
-      <entry key="H1" value="135.67474441777333" />
-      <entry key="H2" value="221.24315256181865" />
-      <entry key="H4" value="298.3006424054342" />
-      <entry key="D1" value="396.1391194751153" />
-      <entry key="W1" value="417.31866742695695" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000188669967287" />
+      <entry key="S5" value="1.0245679625124655" />
+      <entry key="S10" value="1.3321486565795944" />
+      <entry key="S30" value="3.7302833310822714" />
+      <entry key="S60" value="7.12167392691122" />
+      <entry key="M2" value="11.975639441318101" />
+      <entry key="M5" value="24.63350530697646" />
+      <entry key="M10" value="47.561682511422624" />
+      <entry key="M15" value="67.44806242655835" />
+      <entry key="M30" value="116.59775157179797" />
+      <entry key="H1" value="195.1526303124089" />
+      <entry key="H2" value="297.1213004000954" />
+      <entry key="H4" value="393.5522863047495" />
+      <entry key="D1" value="521.5778436592418" />
+      <entry key="W1" value="550.0296236061758" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -80,23 +86,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9659363289248456" />
-      <entry key="MS500" value="0.9930925043755854" />
-      <entry key="S2" value="1.0094294008932296" />
-      <entry key="S5" value="1.2356861374973258" />
-      <entry key="S10" value="1.7874937609538133" />
-      <entry key="S30" value="3.53154994660805" />
-      <entry key="S60" value="5.223362095153969" />
-      <entry key="M2" value="7.367922914854021" />
-      <entry key="M5" value="11.63370021492105" />
-      <entry key="M10" value="19.07322601914212" />
-      <entry key="M15" value="29.20585652373105" />
-      <entry key="M30" value="67.28205978727586" />
-      <entry key="H1" value="135.6740702638189" />
-      <entry key="H2" value="221.24263573373028" />
-      <entry key="H4" value="298.3003151646518" />
-      <entry key="D1" value="396.1390520652165" />
-      <entry key="W1" value="417.3186574248598" />
+      <entry key="MS100" value="0.9726549474122855" />
+      <entry key="MS500" value="0.9944701686732144" />
+      <entry key="S2" value="0.9986335106230598" />
+      <entry key="S5" value="1.0240020322627204" />
+      <entry key="S10" value="1.3317930827580593" />
+      <entry key="S30" value="3.7299655618939047" />
+      <entry key="S60" value="7.12136370384061" />
+      <entry key="M2" value="11.97536404124851" />
+      <entry key="M5" value="24.63323663361589" />
+      <entry key="M10" value="47.56137758518576" />
+      <entry key="M15" value="67.44772403799335" />
+      <entry key="M30" value="116.59728389162655" />
+      <entry key="H1" value="195.15207216082922" />
+      <entry key="H2" value="297.12081572298786" />
+      <entry key="H4" value="393.55195570899633" />
+      <entry key="D1" value="521.5777708141047" />
+      <entry key="W1" value="550.0296126672245" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -161,7 +167,7 @@
       <option name="presentableId" value="Default" />
       <updated>1779491619655</updated>
       <workItem from="1779491620658" duration="11697000" />
-      <workItem from="1781588933031" duration="3810000" />
+      <workItem from="1781588933031" duration="6105000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -219,7 +225,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781591844808</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="More TODOs and PORT settings in config">
+      <option name="closed" value="true" />
+      <created>1781593000575</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1781593000575</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -236,6 +250,7 @@
     <MESSAGE value="Citus Upgrade Playbooks" />
     <MESSAGE value="ETCD Fixes" />
     <MESSAGE value="ETCD Fixes: settings fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="ETCD Fixes: settings fix" />
+    <MESSAGE value="More TODOs and PORT settings in config" />
+    <option name="LAST_COMMIT_MESSAGE" value="More TODOs and PORT settings in config" />
   </component>
 </project>
