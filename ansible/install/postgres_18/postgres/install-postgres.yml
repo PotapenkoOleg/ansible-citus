@@ -136,9 +136,9 @@
       ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "ALTER USER postgres WITH PASSWORD '{{POSTGRES_SUPERUSER_PASSWORD}}';"
     - name: Set Postgres Replication User Password
       ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REPLICATION_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REPLICATION_PASSWORD }}';"
-# TODO: Uncomment the following task if Rewind user is different from Replication user
-#    - name: Set Postgres Rewind User Password
-#      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REWIND_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REWIND_PASSWORD }}';"
+    # TODO: Uncomment the following task if Rewind user is different from Replication user
+    #    - name: Set Postgres Rewind User Password
+    #      ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE USER {{ POSTGRES_REWIND_USERNAME }} WITH REPLICATION PASSWORD '{{ POSTGRES_REWIND_PASSWORD }}';"
     - name: Create Distributed DB managed by Patroni
       ansible.builtin.shell: runuser -u postgres -- psql -U postgres -c "CREATE DATABASE {{PATRONI_CITUS_DB_NAME}};"
     - name: Create Citus Extension
@@ -155,15 +155,15 @@
 # You'll need to change the example, 'coord.example.com',
 # to match the actual hostname
 
-# sudo -i -u postgres psql -c "SELECT citus_set_coordinator_host('coord.example.com', 5432);"
+# sudo -i -u postgres psql -c "SELECT citus_set_coordinator_host('coord.example.com', {{ POSTGRES_DEFAULT_PORT }});"
 
 # Add the worker nodes.
 #
 # Similarly, you'll need to change 'worker-101' and 'worker-102' to the
 # actual hostnames
 
-# sudo -i -u postgres psql -c "SELECT * from citus_add_node('worker-101', 5432);"
-# sudo -i -u postgres psql -c "SELECT * from citus_add_node('worker-102', 5432);"
+# sudo -i -u postgres psql -c "SELECT * from citus_add_node('worker-101', { POSTGRES_DEFAULT_PORT }});"
+# sudo -i -u postgres psql -c "SELECT * from citus_add_node('worker-102', { POSTGRES_DEFAULT_PORT }});"
 
 # CHECK INSTALL
 # sudo -i -u postgres psql -c "SELECT * FROM citus_get_active_worker_nodes();"
