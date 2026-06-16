@@ -2,6 +2,8 @@
 - name: Install ETCD
   hosts: etcd_servers
   become: yes
+  var_files:
+    - cluster-settings.yml # TODO: Replace with content of cluster-settings.yml
   vars:
     CLUSTER_NAME: "constellation" # TODO: Change this to the actual cluster name
     # ETCD SETTINGS

@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="Citus Upgrade Playbooks">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/cluster-settings.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/etcd.service.j2" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/etcd.service.j2" afterDir="false" />
+    <list default="true" id="ffcf269b-7315-4510-88ee-f2404b2de1b5" name="Changes" comment="ETCD Fixes">
       <change beforePath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/install/postgres_18/etcd/install-etcd.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,23 +40,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000006500556649" />
-      <entry key="MS500" value="1.0778539116661006" />
-      <entry key="S2" value="2.0029252096516794" />
-      <entry key="S5" value="3.2388050756873996" />
-      <entry key="S10" value="4.225549119399927" />
-      <entry key="S30" value="5.2818895954340075" />
-      <entry key="S60" value="5.630644641560048" />
-      <entry key="M2" value="6.068787298523352" />
-      <entry key="M5" value="8.599433157478249" />
-      <entry key="M10" value="17.505989404906725" />
-      <entry key="M15" value="30.939578155212384" />
-      <entry key="M30" value="74.69546200052669" />
-      <entry key="H1" value="143.25050057575314" />
-      <entry key="H2" value="223.4123321315048" />
-      <entry key="H4" value="293.09179597165837" />
-      <entry key="D1" value="379.37887951541677" />
-      <entry key="W1" value="397.80528173049885" />
+      <entry key="MS100" value="1.0002374649004477" />
+      <entry key="MS500" value="1.2013003867345358" />
+      <entry key="S2" value="2.1268544889018175" />
+      <entry key="S5" value="2.938284697870669" />
+      <entry key="S10" value="3.3916179706130913" />
+      <entry key="S30" value="3.895515556413291" />
+      <entry key="S60" value="4.73073816766395" />
+      <entry key="M2" value="6.293446731094379" />
+      <entry key="M5" value="9.861872631881837" />
+      <entry key="M10" value="18.470483656106506" />
+      <entry key="M15" value="31.257658362579445" />
+      <entry key="M30" value="74.11636162108061" />
+      <entry key="H1" value="142.79209250024016" />
+      <entry key="H2" value="223.90877518761212" />
+      <entry key="H4" value="294.784736694955" />
+      <entry key="D1" value="382.8795532533672" />
+      <entry key="W1" value="401.7304431569754" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -81,23 +78,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9395233556166683" />
-      <entry key="MS500" value="1.0642198595055299" />
-      <entry key="S2" value="1.9956109695969935" />
-      <entry key="S5" value="3.234074532066112" />
-      <entry key="S10" value="4.222554081177791" />
-      <entry key="S30" value="5.280683677178635" />
-      <entry key="S60" value="5.63000909270315" />
-      <entry key="M2" value="6.0684532131284" />
-      <entry key="M5" value="8.59921544150432" />
-      <entry key="M10" value="17.50550707951439" />
-      <entry key="M15" value="30.938867047317316" />
-      <entry key="M30" value="74.69455551047642" />
-      <entry key="H1" value="143.24970089697183" />
-      <entry key="H2" value="223.41177218272577" />
-      <entry key="H4" value="293.0914574733157" />
-      <entry key="D1" value="379.37881245597225" />
-      <entry key="W1" value="397.8052718471359" />
+      <entry key="MS100" value="0.9796528755282677" />
+      <entry key="MS500" value="1.1962951893171077" />
+      <entry key="S2" value="2.1242980488169034" />
+      <entry key="S5" value="2.9366642788886463" />
+      <entry key="S10" value="3.390625590520731" />
+      <entry key="S30" value="3.895104158155637" />
+      <entry key="S60" value="4.730442951775961" />
+      <entry key="M2" value="6.293215376108979" />
+      <entry key="M5" value="9.861682376332089" />
+      <entry key="M10" value="18.470063931092156" />
+      <entry key="M15" value="31.257017873445836" />
+      <entry key="M30" value="74.11550373244103" />
+      <entry key="H1" value="142.79131423564553" />
+      <entry key="H2" value="223.9082222852206" />
+      <entry key="H4" value="294.7843999942331" />
+      <entry key="D1" value="382.8794861377682" />
+      <entry key="W1" value="401.7304332548423" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -162,7 +159,7 @@
       <option name="presentableId" value="Default" />
       <updated>1779491619655</updated>
       <workItem from="1779491620658" duration="11697000" />
-      <workItem from="1781588933031" duration="2562000" />
+      <workItem from="1781588933031" duration="2753000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -204,7 +201,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779504172903</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="ETCD Fixes">
+      <option name="closed" value="true" />
+      <created>1781591763502</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1781591763502</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -219,6 +224,7 @@
     <MESSAGE value="Install Postgres 18 with Citus 14.0" />
     <MESSAGE value="Bonus" />
     <MESSAGE value="Citus Upgrade Playbooks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Citus Upgrade Playbooks" />
+    <MESSAGE value="ETCD Fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="ETCD Fixes" />
   </component>
 </project>
