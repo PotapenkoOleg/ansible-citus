@@ -4,7 +4,7 @@ Steps:
 1. Build a new cluster side-by-side with the existing one
 2. Add HAProxy config for new cluster
 3. Take schema only backup from old cluster `pg_dump --host localhost --port 5000 --username {{ POSTGRES_SUPERUSER_USERNAME }} --password --dbname {{ CLUSTER_NAME }} --file {{ CLUSTER_NAME }}.dump --format t --schema-only`
-4. Restore schema only backup on new cluster `pg_restore --username {{ POSTGRES_SUPERUSER_USERNAME }} --dbname {{ CLUSTER_NAME }} --file {{ CLUSTER_NAME }}.dump --format t --schema-only --clean --if-exists`
+4. Restore schema only backup on new cluster `pg_restore --host localhost --port 5000 --username {{ POSTGRES_SUPERUSER_USERNAME }} --password --dbname {{ CLUSTER_NAME }} --format t --schema-only --clean --if-exists --verbose {{ CLUSTER_NAME }}.dump`
 5. Restore Citus shard information using https://github.com/PotapenkoOleg/citus_shard_export
 6. Restore functions/stored procedures from old cluster 
 7. Restore pg_cron jobs from old cluster
